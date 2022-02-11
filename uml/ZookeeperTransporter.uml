@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.remoting.zookeeper.ZookeeperTransporter</OriginalElement>
+  <nodes>
+    <node x="265.25" y="0.0">org.apache.dubbo.common.extension.SPI</node>
+    <node x="0.0" y="234.0">org.apache.dubbo.remoting.zookeeper.curator5.Curator5ZookeeperTransporter</node>
+    <node x="190.25" y="78.0">org.apache.dubbo.remoting.zookeeper.ZookeeperTransporter</node>
+    <node x="316.0" y="234.0">org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperTransporter</node>
+    <node x="156.75" y="156.0">org.apache.dubbo.remoting.zookeeper.AbstractZookeeperTransporter</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.remoting.zookeeper.ZookeeperTransporter" target="org.apache.dubbo.common.extension.SPI" relationship="ANNOTATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.remoting.zookeeper.curator5.Curator5ZookeeperTransporter" target="org.apache.dubbo.remoting.zookeeper.AbstractZookeeperTransporter" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="148.0" y="209.0" />
+      <point x="303.25" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperTransporter" target="org.apache.dubbo.remoting.zookeeper.AbstractZookeeperTransporter" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="458.5" y="209.0" />
+      <point x="303.25" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.remoting.zookeeper.AbstractZookeeperTransporter" target="org.apache.dubbo.remoting.zookeeper.ZookeeperTransporter" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.85" showDependencies="false" x="390.9999999999999" y="182.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -129,18 +129,20 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
         if (null != defaultNopRegistry) {
             return defaultNopRegistry;
         }
-
+        // 设置path和interface，删除 export 和 refer 参数
         url = URLBuilder.from(url)
                 .setPath(RegistryService.class.getName())
                 .addParameter(INTERFACE_KEY, RegistryService.class.getName())
                 .removeParameters(EXPORT_KEY, REFER_KEY)
                 .build();
+        //创建缓存的key，示例：zookeeper://dubbo-zookeeper:2181/org.apache.dubbo.registry.RegistryService
         String key = createRegistryCacheKey(url);
         // Lock the registry access process to ensure a single instance of the registry
         LOCK.lock();
         try {
             // double check
             // fix https://github.com/apache/dubbo/issues/7265.
+            // A线程调用destroyAll()，B线程已经执行在上面的getDefaultNopRegistryIfDestroyed之后
             defaultNopRegistry = getDefaultNopRegistryIfDestroyed();
             if (null != defaultNopRegistry) {
                 return defaultNopRegistry;

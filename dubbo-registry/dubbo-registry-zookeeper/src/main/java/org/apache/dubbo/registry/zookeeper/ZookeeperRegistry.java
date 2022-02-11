@@ -59,10 +59,12 @@ import static org.apache.dubbo.common.constants.RegistryConstants.ROUTERS_CATEGO
  */
 public class ZookeeperRegistry extends FailbackRegistry {
 
+    //<dubbo:registry group="dubbo" />  默认是dubbo
     private static final String DEFAULT_ROOT = "dubbo";
-
+    //根节点
     private final String root;
 
+    //Service 接口全名集合。可用于监控中心，订阅整个Service层。
     private final Set<String> anyServices = new ConcurrentHashSet<>();
 
     private final ConcurrentMap<URL, ConcurrentMap<NotifyListener, ChildListener>> zkListeners = new ConcurrentHashMap<>();
@@ -74,12 +76,15 @@ public class ZookeeperRegistry extends FailbackRegistry {
         if (url.isAnyHost()) {
             throw new IllegalStateException("registry address == null");
         }
+        //<dubbo:registry group="dubbo" />  默认是dubbo
         String group = url.getParameter(GROUP_KEY, DEFAULT_ROOT);
+        // dubbo变更为/dubbo,符合zk目录结构
         if (!group.startsWith(PATH_SEPARATOR)) {
             group = PATH_SEPARATOR + group;
         }
         this.root = group;
         zkClient = zookeeperTransporter.connect(url);
+        //添加回调状态监听器
         zkClient.addStateListener((state) -> {
             if (state == StateListener.RECONNECTED) {
                 logger.warn("Trying to fetch the latest urls, in case there're provider changes during connection loss.\n" +
@@ -122,6 +127,10 @@ public class ZookeeperRegistry extends FailbackRegistry {
     @Override
     public void doRegister(URL url) {
         try {
+            // toUrlPath格式：/{group}/{interfaceName}/{category}/{url.toFullString}
+            // toUrlPath: /dubbo/cn.jannal.dubbo.facade.DemoService/providers/ + URL
+            // 默认dynamic=true，服务是否动态注册，如果设为false，注册后将显示为disable状态，需人工启用，并且服务提供者停止时，也不会自动取消注册，需人工禁用
+            // false表示持久节点，当注册方下线时，持久化节点仍然在zk上。true表示断开连接节点会被删除，所以需要recover
             zkClient.create(toUrlPath(url), url.getParameter(DYNAMIC_KEY, true));
         } catch (Throwable e) {
             throw new RpcException("Failed to register " + url + " to zookeeper " + getUrl() + ", cause: " + e.getMessage(), e);
@@ -140,12 +149,15 @@ public class ZookeeperRegistry extends FailbackRegistry {
     @Override
     public void doSubscribe(final URL url, final NotifyListener listener) {
         try {
+            // 如果是通配符*，表示全量订阅（订阅所有），即providers、routers、consumers、configurators四种类型
+            // 客户端第一次连接到注册中心时，获取全量订阅
             if (ANY_VALUE.equals(url.getServiceInterface())) {
                 String root = toRootPath();
                 ConcurrentMap<NotifyListener, ChildListener> listeners = zkListeners.computeIfAbsent(url, k -> new ConcurrentHashMap<>());
                 ChildListener zkListener = listeners.computeIfAbsent(listener, k -> (parentPath, currentChilds) -> {
                     for (String child : currentChilds) {
                         child = URL.decode(child);
+                        //有新增服务接口，则发起订阅
                         if (!anyServices.contains(child)) {
                             anyServices.add(child);
                             subscribe(url.setPath(child).addParameters(INTERFACE_KEY, child,
@@ -153,8 +165,11 @@ public class ZookeeperRegistry extends FailbackRegistry {
                         }
                     }
                 });
+                // 创建持久化节点
                 zkClient.create(root, false);
+                // 订阅持久化节点的子节点
                 List<String> services = zkClient.addChildListener(root, zkListener);
+                // 获取到全量service，对每一个service进行订阅
                 if (CollectionUtils.isNotEmpty(services)) {
                     for (String service : services) {
                         service = URL.decode(service);
@@ -167,18 +182,29 @@ public class ZookeeperRegistry extends FailbackRegistry {
                 CountDownLatch latch = new CountDownLatch(1);
                 try {
                     List<URL> urls = new ArrayList<>();
+                    // 通过category获取类别（providers、routers、consumers、configurators）
+                    // toCategoriesPath将url转变成
+                    //  /dubbo/xxx.DemoService/providers
+                    //  /dubbo/xxx.DemoService/configurators
+                    //  /dubbo/xxx.DemoService/routers
+                    // 根据url类别获取一组要订阅的路径
                     for (String path : toCategoriesPath(url)) {
+                        // 如果缓存没有，则添加到缓存中
                         ConcurrentMap<NotifyListener, ChildListener> listeners = zkListeners.computeIfAbsent(url, k -> new ConcurrentHashMap<>());
                         ChildListener zkListener = listeners.computeIfAbsent(listener, k -> new RegistryChildListenerImpl(url, k, latch));
                         if (zkListener instanceof RegistryChildListenerImpl) {
+                            // 主线程执行完，通知zk的ChildListener，即childChanged的执行需要在主线程执行完之后才能调用
+                            // RegistryChildListenerImpl.childChanged当子节点改变时回调此方法，然后调用ZookeeperRegistry.this.notify通知
                             ((RegistryChildListenerImpl) zkListener).setLatch(latch);
                         }
+                        // 创建持久节点
                         zkClient.create(path, false);
                         List<String> children = zkClient.addChildListener(path, zkListener);
                         if (children != null) {
                             urls.addAll(toUrlsWithEmpty(url, path, children));
                         }
                     }
+                    // 立即通知一次（回调NotifyListener），urls为所有子节点的url（routers、configurators、providers）
                     notify(url, listener, urls);
                 } finally {
                     // tells the listener to run only after the sync notification of main thread finishes.
@@ -200,6 +226,12 @@ public class ZookeeperRegistry extends FailbackRegistry {
                     String root = toRootPath();
                     zkClient.removeChildListener(root, zkListener);
                 } else {
+                    /**
+                     * 移除zk节点监听器
+                     * /dubbo/cn.jannal.dubbo.facade.DemoService/providers
+                     * /dubbo/cn.jannal.dubbo.facade.DemoService/configurators
+                     * /dubbo/cn.jannal.dubbo.facade.DemoService/routers
+                     */
                     for (String path : toCategoriesPath(url)) {
                         zkClient.removeChildListener(path, zkListener);
                     }

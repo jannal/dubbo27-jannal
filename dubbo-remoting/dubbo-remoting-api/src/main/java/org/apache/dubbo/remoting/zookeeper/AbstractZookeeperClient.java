@@ -31,20 +31,21 @@ import java.util.concurrent.Executor;
 public abstract class AbstractZookeeperClient<TargetDataListener, TargetChildListener> implements ZookeeperClient {
 
     protected static final Logger logger = LoggerFactory.getLogger(AbstractZookeeperClient.class);
-
+    // 默认连接超时时间
     protected int DEFAULT_CONNECTION_TIMEOUT_MS = 5 * 1000;
+    // session超时时间
     protected int DEFAULT_SESSION_TIMEOUT_MS = 60 * 1000;
 
     private final URL url;
-
+    // 连接状态监听器
     private final Set<StateListener> stateListeners = new CopyOnWriteArraySet<StateListener>();
-
+    // 子节点监听器，key为父节点path
     private final ConcurrentMap<String, ConcurrentMap<ChildListener, TargetChildListener>> childListeners = new ConcurrentHashMap<String, ConcurrentMap<ChildListener, TargetChildListener>>();
-
+    // 节点数据监听器，key为父节点path
     private final ConcurrentMap<String, ConcurrentMap<DataListener, TargetDataListener>> listeners = new ConcurrentHashMap<String, ConcurrentMap<DataListener, TargetDataListener>>();
 
     private volatile boolean closed = false;
-
+    // 缓存已经存在的持久节点，减少远程访问判断
     private final Set<String> persistentExistNodePath = new ConcurrentHashSet<>();
 
     public AbstractZookeeperClient(URL url) {
@@ -67,14 +68,17 @@ public abstract class AbstractZookeeperClient<TargetDataListener, TargetChildLis
     @Override
     public void create(String path, boolean ephemeral) {
         if (!ephemeral) {
+            // 持久节点如果在缓存中已经存在，直接返回
             if (persistentExistNodePath.contains(path)) {
                 return;
             }
+            // 如果持久节点已经存在并且不再缓存中，则添加到缓存中
             if (checkExists(path)) {
                 persistentExistNodePath.add(path);
                 return;
             }
         }
+        // /作为分隔符号，递归创建父节点，zk的父节点一定是持久化节点，所以传入false
         int i = path.lastIndexOf('/');
         if (i > 0) {
             create(path.substring(0, i), false);
@@ -82,6 +86,7 @@ public abstract class AbstractZookeeperClient<TargetDataListener, TargetChildLis
         if (ephemeral) {
             createEphemeral(path);
         } else {
+            // 创建持久节点，并添加到缓存中
             createPersistent(path);
             persistentExistNodePath.add(path);
         }

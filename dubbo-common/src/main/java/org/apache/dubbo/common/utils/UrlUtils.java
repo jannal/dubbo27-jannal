@@ -379,6 +379,12 @@ public class UrlUtils {
         }
     }
 
+    /**
+     * 1. 匹配 Consumer 和 Provider 的接口（优先取 interface 参数，其次再取 path），双方接口相同或者其中一方为“*”，则匹配成功
+     * 2. 匹配 Consumer 和 Provider 的 category
+     * 3. 检测 Consumer URL 和 Provider URL 中的 enable 参数是否符合条件
+     * 4. 检测 Consumer 和 Provider 端的 group、version 以及 classifier 是否符合条件。
+     */
     public static boolean isMatch(URL consumerUrl, URL providerUrl) {
         String consumerInterface = consumerUrl.getServiceInterface();
         String providerInterface = providerUrl.getServiceInterface();
@@ -388,11 +394,12 @@ public class UrlUtils {
                 || StringUtils.isEquals(consumerInterface, providerInterface))) {
             return false;
         }
-
+        // 匹配 Consumer 和 Provider 的 category
         if (!isMatchCategory(providerUrl.getParameter(CATEGORY_KEY, DEFAULT_CATEGORY),
                 consumerUrl.getParameter(CATEGORY_KEY, DEFAULT_CATEGORY))) {
             return false;
         }
+        // 检测 Consumer URL 和 Provider URL 中的 enable 参数是否符合条件
         if (!providerUrl.getParameter(ENABLED_KEY, true)
                 && !ANY_VALUE.equals(consumerUrl.getParameter(ENABLED_KEY))) {
             return false;
@@ -405,6 +412,7 @@ public class UrlUtils {
         String providerGroup = providerUrl.getParameter(GROUP_KEY);
         String providerVersion = providerUrl.getParameter(VERSION_KEY);
         String providerClassifier = providerUrl.getParameter(CLASSIFIER_KEY, ANY_VALUE);
+        // 检测 Consumer 和 Provider 端的 group、version 以及 classifier 是否符合条件。
         return (ANY_VALUE.equals(consumerGroup) || StringUtils.isEquals(consumerGroup, providerGroup) || StringUtils.isContains(consumerGroup, providerGroup))
                 && (ANY_VALUE.equals(consumerVersion) || StringUtils.isEquals(consumerVersion, providerVersion))
                 && (consumerClassifier == null || ANY_VALUE.equals(consumerClassifier) || StringUtils.isEquals(consumerClassifier, providerClassifier));

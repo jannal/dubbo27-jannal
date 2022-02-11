@@ -57,6 +57,7 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
 
     static final Charset CHARSET = StandardCharsets.UTF_8;
     private final CuratorFramework client;
+    // NodeCache是用来监听节点的数据变化的，当监听的节点数据发生变化，就会回调
     private static Map<String, NodeCache> nodeCacheMap = new ConcurrentHashMap<>();
 
     public CuratorZookeeperClient(URL url) {
@@ -64,16 +65,19 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
         try {
             int timeout = url.getParameter(TIMEOUT_KEY, DEFAULT_CONNECTION_TIMEOUT_MS);
             int sessionExpireMs = url.getParameter(ZK_SESSION_EXPIRE_KEY, DEFAULT_SESSION_TIMEOUT_MS);
+            // 创建CuratorFramework客户端,url.getBackupAddress()获取所有地址，只要有一个连接上即可
             CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
                     .connectString(url.getBackupAddress())
                     .retryPolicy(new RetryNTimes(1, 1000))
                     .connectionTimeoutMs(timeout)
                     .sessionTimeoutMs(sessionExpireMs);
+            // 授权信息
             String authority = url.getAuthority();
             if (authority != null && authority.length() > 0) {
                 builder = builder.authorization("digest", authority.getBytes());
             }
             client = builder.build();
+            // 添加连接状态监听器，将CuratorFramework的连接事件，转换成统一的StateListener
             client.getConnectionStateListenable().addListener(new CuratorConnectionStateListener(url));
             client.start();
             boolean connected = client.blockUntilConnected(timeout, TimeUnit.MILLISECONDS);
@@ -99,6 +103,7 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
     @Override
     public void createEphemeral(String path) {
         try {
+            // 创建临时节点，如果已经存在，则删除后重新创建
             client.create().withMode(CreateMode.EPHEMERAL).forPath(path);
         } catch (NodeExistsException e) {
             logger.warn("ZNode " + path + " already exists, since we will only try to recreate a node on a session expiration" +
@@ -116,6 +121,7 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
     protected void createPersistent(String path, String data) {
         byte[] dataBytes = data.getBytes(CHARSET);
         try {
+            // 创建持久节点，如果节点存在，则更新持久化数据
             client.create().forPath(path, dataBytes);
         } catch (NodeExistsException e) {
             try {
@@ -132,6 +138,7 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
     protected void createEphemeral(String path, String data) {
         byte[] dataBytes = data.getBytes(CHARSET);
         try {
+            // 创建临时节点，如果节点存在，则删除后再设置数据
             client.create().withMode(CreateMode.EPHEMERAL).forPath(path, dataBytes);
         } catch (NodeExistsException e) {
             logger.warn("ZNode " + path + " already exists, since we will only try to recreate a node on a session expiration" +
@@ -259,6 +266,7 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
         listener.unwatch();
     }
 
+    // 节点数据变化监听器，统一转换为DataListener
     static class NodeCacheListenerImpl implements NodeCacheListener {
 
         private CuratorFramework client;
@@ -294,6 +302,7 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
         }
     }
 
+    // 子节点变化监听器，统一转换为ChildListener
     static class CuratorWatcherImpl implements CuratorWatcher {
 
         private CuratorFramework client;
@@ -347,19 +356,23 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
             } catch (Exception e) {
                 logger.warn("Curator client state changed, but failed to get the related zk session instance.");
             }
-
+            // 将CuratorFramework的连接事件，转换成统一的StateListener
             if (state == ConnectionState.LOST) {
+                // 连接丢失，调用父类AbstractZookeeperClient发布连接丢失事件，即给StateListener方法传入参数
                 logger.warn("Curator zookeeper session " + Long.toHexString(lastSessionId) + " expired.");
                 CuratorZookeeperClient.this.stateChanged(StateListener.SESSION_LOST);
             } else if (state == ConnectionState.SUSPENDED) {
+                // 连接悬挂
                 logger.warn("Curator zookeeper connection of session " + Long.toHexString(sessionId) + " timed out. " +
                         "connection timeout value is " + timeout + ", session expire timeout value is " + sessionExpireMs);
                 CuratorZookeeperClient.this.stateChanged(StateListener.SUSPENDED);
             } else if (state == ConnectionState.CONNECTED) {
+                // 连接成功
                 lastSessionId = sessionId;
                 logger.info("Curator zookeeper client instance initiated successfully, session id is " + Long.toHexString(sessionId));
                 CuratorZookeeperClient.this.stateChanged(StateListener.CONNECTED);
             } else if (state == ConnectionState.RECONNECTED) {
+                // 重连
                 if (lastSessionId == sessionId && sessionId != UNKNOWN_SESSION_ID) {
                     logger.warn("Curator zookeeper connection recovered from connection lose, " +
                             "reuse the old session " + Long.toHexString(sessionId));

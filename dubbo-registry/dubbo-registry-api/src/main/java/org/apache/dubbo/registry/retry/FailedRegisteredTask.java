@@ -34,7 +34,9 @@ public final class FailedRegisteredTask extends AbstractRetryTask {
 
     @Override
     protected void doRetry(URL url, FailbackRegistry registry, Timeout timeout) {
+        // 重新执行核心注册逻辑
         registry.doRegister(url);
+        // 删除FailedRegisteredTask任务
         registry.removeFailedRegisteredTask(url);
     }
 }

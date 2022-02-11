@@ -35,7 +35,7 @@ public class ZookeeperRegistryFactory extends AbstractRegistryFactory {
 
     /**
      * Invisible injection of zookeeper client via IOC/SPI
-     *
+     * //@DisableInject 是禁止注入注解
      * @param zookeeperTransporter
      */
     @DisableInject

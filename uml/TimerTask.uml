@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.common.timer.TimerTask</OriginalElement>
+  <nodes>
+    <node x="263.00000000000006" y="156.0">org.apache.dubbo.registry.retry.FailedUnregisteredTask</node>
+    <node x="0.0" y="156.0">org.apache.dubbo.registry.retry.FailedUnsubscribedTask</node>
+    <node x="999.0" y="156.0">org.apache.dubbo.registry.retry.ReExportTask</node>
+    <node x="518.0" y="156.0">org.apache.dubbo.registry.retry.FailedSubscribedTask</node>
+    <node x="532.5" y="78.0">org.apache.dubbo.registry.retry.AbstractRetryTask</node>
+    <node x="761.0" y="156.0">org.apache.dubbo.registry.retry.FailedRegisteredTask</node>
+    <node x="564.5" y="0.0">org.apache.dubbo.common.timer.TimerTask</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.registry.retry.AbstractRetryTask" target="org.apache.dubbo.common.timer.TimerTask" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.retry.FailedRegisteredTask" target="org.apache.dubbo.registry.retry.AbstractRetryTask" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="870.0" y="131.0" />
+      <point x="629.5" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.retry.FailedSubscribedTask" target="org.apache.dubbo.registry.retry.AbstractRetryTask" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.retry.FailedUnsubscribedTask" target="org.apache.dubbo.registry.retry.AbstractRetryTask" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="121.5" y="131.0" />
+      <point x="629.5" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.retry.FailedUnregisteredTask" target="org.apache.dubbo.registry.retry.AbstractRetryTask" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="380.50000000000006" y="131.0" />
+      <point x="629.5" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.retry.ReExportTask" target="org.apache.dubbo.registry.retry.AbstractRetryTask" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1078.0" y="131.0" />
+      <point x="629.5" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.7" showDependencies="false" x="893.1428571428571" y="170.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>public</VISIBILITY>
+</Diagram>
+
