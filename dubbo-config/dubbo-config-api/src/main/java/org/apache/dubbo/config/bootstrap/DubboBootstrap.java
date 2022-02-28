@@ -596,10 +596,12 @@ public class DubboBootstrap {
 
         useRegistryAsConfigCenterIfNecessary();
 
+        // 从配置管理器获取配置中心配置
         Collection<ConfigCenterConfig> configCenters = configManager.getConfigCenters();
 
         // check Config Center
         if (CollectionUtils.isEmpty(configCenters)) {
+            // 如果没有配置中心，则创建一个默认的
             ConfigCenterConfig configCenterConfig = new ConfigCenterConfig();
             configCenterConfig.refresh();
             if (configCenterConfig.isValid()) {
@@ -607,6 +609,7 @@ public class DubboBootstrap {
                 configCenters = configManager.getConfigCenters();
             }
         } else {
+            // 遍历所有配置中心，刷新配置信息
             for (ConfigCenterConfig configCenterConfig : configCenters) {
                 configCenterConfig.refresh();
                 ConfigValidationUtils.validateConfigCenterConfig(configCenterConfig);
@@ -616,10 +619,12 @@ public class DubboBootstrap {
         if (CollectionUtils.isNotEmpty(configCenters)) {
             CompositeDynamicConfiguration compositeDynamicConfiguration = new CompositeDynamicConfiguration();
             for (ConfigCenterConfig configCenter : configCenters) {
+                // prepareEnvironment 通过配置构建配置中心实现类，并获取配置
                 compositeDynamicConfiguration.addConfiguration(prepareEnvironment(configCenter));
             }
             environment.setDynamicConfiguration(compositeDynamicConfiguration);
         }
+        // 刷新所有AbstractConfig配置
         configManager.refreshAll();
     }
 
@@ -831,12 +836,15 @@ public class DubboBootstrap {
     private void loadRemoteConfigs() {
         // registry ids to registry configs
         List<RegistryConfig> tmpRegistries = new ArrayList<>();
+        // 获取dubbo.registries.的的值
         Set<String> registryIds = configManager.getRegistryIds();
         registryIds.forEach(id -> {
+            // 如果id对应的RegistryConfig不存在，则创建
             if (tmpRegistries.stream().noneMatch(reg -> reg.getId().equals(id))) {
                 tmpRegistries.add(configManager.getRegistry(id).orElseGet(() -> {
                     RegistryConfig registryConfig = new RegistryConfig();
                     registryConfig.setId(id);
+                    // 使用Environment对象的属性值初始化RegistryConfig对象
                     registryConfig.refresh();
                     return registryConfig;
                 }));
@@ -847,6 +855,7 @@ public class DubboBootstrap {
 
         // protocol ids to protocol configs
         List<ProtocolConfig> tmpProtocols = new ArrayList<>();
+        // 获取dubbo.protocols.的的值
         Set<String> protocolIds = configManager.getProtocolIds();
         protocolIds.forEach(id -> {
             if (tmpProtocols.stream().noneMatch(prot -> prot.getId().equals(id))) {
@@ -1021,25 +1030,37 @@ public class DubboBootstrap {
             if (!configCenter.checkOrUpdateInited()) {
                 return null;
             }
+            // 获取配置中心实现
             DynamicConfiguration dynamicConfiguration = getDynamicConfiguration(configCenter.toUrl());
+            /**
+             * 默认group是dubbo，默认配置文件名称dubbo.properties。配置内容，比如
+             * dubbo.registry.address=zookeeper://dubbo-zookeeper:2181
+             * dubbo.metadata-report.address=zookeeper://dubbo-zookeeper:2181
+             * dubbo.registry.simplified=true
+             */
             String configContent = dynamicConfiguration.getProperties(configCenter.getConfigFile(), configCenter.getGroup());
 
+            // 默认以应用名称作为组，获取应用的配置
             String appGroup = getApplication().getName();
             String appConfigContent = null;
             if (isNotEmpty(appGroup)) {
+                //
                 appConfigContent = dynamicConfiguration.getProperties
                         (isNotEmpty(configCenter.getAppConfigFile()) ? configCenter.getAppConfigFile() : configCenter.getConfigFile(),
                                 appGroup
                         );
             }
             try {
+                // 配置中心是否优先级高
                 environment.setConfigCenterFirst(configCenter.isHighestPriority());
+                // 将从远程获取的properties内容，加载到properteis中（全部的配置）
                 Map<String, String> globalRemoteProperties = parseProperties(configContent);
                 if (CollectionUtils.isEmptyMap(globalRemoteProperties)) {
                     logger.info("No global configuration in config center");
                 }
                 environment.updateExternalConfigurationMap(globalRemoteProperties);
 
+                //应用级别配置
                 Map<String, String> appRemoteProperties = parseProperties(appConfigContent);
                 if (CollectionUtils.isEmptyMap(appRemoteProperties)) {
                     logger.info("No application level configuration in config center");

@@ -27,6 +27,7 @@ public class EnvironmentConfiguration implements Configuration {
     public Object getInternalProperty(String key) {
         String value = System.getenv(key);
         if (StringUtils.isEmpty(value)) {
+            // 替换key字符串中所有的.为下划线(_)  如果不是DUBBO_开头，加上前缀
             value = System.getenv(StringUtils.toOSStyleKey(key));
         }
         return value;

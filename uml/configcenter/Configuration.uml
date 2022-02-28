@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.common.config.Configuration</OriginalElement>
+  <nodes>
+    <node x="1778.5" y="78.0">org.apache.dubbo.common.config.EnvironmentConfiguration</node>
+    <node x="907.5000000000001" y="-15.0">org.apache.dubbo.common.config.configcenter.ConfigurationListener</node>
+    <node x="2055.5" y="78.0">org.apache.dubbo.common.config.SystemConfiguration</node>
+    <node x="2585.5" y="78.0">org.apache.dubbo.common.config.PropertiesConfiguration</node>
+    <node x="1565.5" y="0.0">org.apache.dubbo.common.config.Configuration</node>
+    <node x="1283.5" y="156.0">org.apache.dubbo.configcenter.support.etcd.EtcdDynamicConfiguration</node>
+    <node x="331.0" y="312.0">org.apache.dubbo.common.config.configcenter.file.FileSystemDynamicConfiguration</node>
+    <node x="1565.5" y="156.0">org.apache.dubbo.configcenter.support.nacos.NacosDynamicConfiguration</node>
+    <node x="1197.0000000000005" y="-15.0">org.apache.dubbo.common.config.configcenter.ConfigChangedEvent</node>
+    <node x="1515.5" y="78.0">org.apache.dubbo.common.config.CompositeConfiguration</node>
+    <node x="664.0" y="312.0">org.apache.dubbo.configcenter.consul.ConsulDynamicConfiguration</node>
+    <node x="2292.5" y="78.0">org.apache.dubbo.config.context.ConfigConfigurationAdapter</node>
+    <node x="1258.5" y="78.0">org.apache.dubbo.common.config.InmemoryConfiguration</node>
+    <node x="654.5" y="156.0">org.apache.dubbo.common.config.configcenter.wrapper.CompositeDynamicConfiguration</node>
+    <node x="340.5" y="156.0">org.apache.dubbo.common.config.configcenter.AbstractDynamicConfiguration</node>
+    <node x="0.0" y="312.0">org.apache.dubbo.configcenter.support.zookeeper.ZookeeperDynamicConfiguration</node>
+    <node x="986.5" y="156.0">org.apache.dubbo.configcenter.support.apollo.ApolloDynamicConfiguration</node>
+    <node x="1011.5" y="78.0">org.apache.dubbo.common.config.configcenter.DynamicConfiguration</node>
+    <node x="339.5" y="234.0">org.apache.dubbo.common.config.configcenter.TreePathDynamicConfiguration</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.configcenter.support.etcd.EtcdDynamicConfiguration" target="org.apache.dubbo.common.config.configcenter.DynamicConfiguration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1414.5" y="131.0" />
+      <point x="1125.0" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.CompositeConfiguration" target="org.apache.dubbo.common.config.Configuration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1637.0" y="58.0" />
+      <point x="2035.5" y="58.0" />
+      <point x="2035.5" y="48.0" />
+      <point x="1684.0" y="48.0" />
+      <point x="39.5" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.configcenter.file.FileSystemDynamicConfiguration" target="org.apache.dubbo.common.config.configcenter.TreePathDynamicConfiguration" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.configcenter.support.nacos.NacosDynamicConfiguration" target="org.apache.dubbo.common.config.configcenter.DynamicConfiguration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1703.5" y="131.0" />
+      <point x="1125.0" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.configcenter.DynamicConfiguration" target="org.apache.dubbo.common.config.Configuration" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1125.0" y="48.0" />
+      <point x="1605.0" y="48.0" />
+      <point x="-39.5" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.EnvironmentConfiguration" target="org.apache.dubbo.common.config.Configuration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1907.0" y="58.0" />
+      <point x="2035.5" y="58.0" />
+      <point x="2035.5" y="48.0" />
+      <point x="1684.0" y="48.0" />
+      <point x="39.5" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.PropertiesConfiguration" target="org.apache.dubbo.common.config.Configuration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="2705.5" y="58.0" />
+      <point x="2035.5" y="58.0" />
+      <point x="2035.5" y="48.0" />
+      <point x="1684.0" y="48.0" />
+      <point x="39.5" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.SystemConfiguration" target="org.apache.dubbo.common.config.Configuration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="2164.0" y="58.0" />
+      <point x="2035.5" y="58.0" />
+      <point x="2035.5" y="48.0" />
+      <point x="1684.0" y="48.0" />
+      <point x="39.5" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.configcenter.TreePathDynamicConfiguration" target="org.apache.dubbo.common.config.configcenter.AbstractDynamicConfiguration" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.InmemoryConfiguration" target="org.apache.dubbo.common.config.Configuration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1377.0" y="58.0" />
+      <point x="2035.5" y="58.0" />
+      <point x="2035.5" y="48.0" />
+      <point x="1684.0" y="48.0" />
+      <point x="39.5" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.configcenter.support.zookeeper.ZookeeperDynamicConfiguration" target="org.apache.dubbo.common.config.configcenter.TreePathDynamicConfiguration" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="155.5" y="287.0" />
+      <point x="487.5" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.configcenter.consul.ConsulDynamicConfiguration" target="org.apache.dubbo.common.config.configcenter.TreePathDynamicConfiguration" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="804.5" y="287.0" />
+      <point x="487.5" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.configcenter.support.apollo.ApolloDynamicConfiguration" target="org.apache.dubbo.common.config.configcenter.DynamicConfiguration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.configcenter.AbstractDynamicConfiguration" target="org.apache.dubbo.common.config.configcenter.DynamicConfiguration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="487.5" y="131.0" />
+      <point x="1125.0" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.config.context.ConfigConfigurationAdapter" target="org.apache.dubbo.common.config.Configuration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="2429.0" y="58.0" />
+      <point x="2035.5" y="58.0" />
+      <point x="2035.5" y="48.0" />
+      <point x="1684.0" y="48.0" />
+      <point x="39.5" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.configcenter.wrapper.CompositeDynamicConfiguration" target="org.apache.dubbo.common.config.configcenter.DynamicConfiguration" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="810.5" y="131.0" />
+      <point x="1125.0" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.3999999999999999" showDependencies="false" x="1321.7500000000005" y="92.00000000000011" />
+  <SelectedNodes>
+    <node>org.apache.dubbo.common.config.configcenter.ConfigurationListener</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

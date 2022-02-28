@@ -30,6 +30,7 @@ import java.util.List;
 public class CompositeConfiguration implements Configuration {
     private Logger logger = LoggerFactory.getLogger(CompositeConfiguration.class);
 
+    // id和prefix可以作为key的前缀进行查询
     private String id;
     private String prefix;
 
@@ -113,6 +114,7 @@ public class CompositeConfiguration implements Configuration {
     @Override
     public Object getProperty(String key, Object defaultValue) {
         Object value = null;
+        // 检查是否有前缀，如果有，则使用前缀查询
         if (StringUtils.isNotEmpty(prefix)) {
             if (StringUtils.isNotEmpty(id)) {
                 value = getInternalProperty(prefix + id + "." + key);

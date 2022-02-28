@@ -98,6 +98,7 @@ public class CacheListener implements DataListener {
     @Override
     public void dataChanged(String path, Object value, EventType eventType) {
         ConfigChangeType changeType;
+        // 将zk的事件转换为ConfigChangedEvent事件
         if (EventType.NodeCreated.equals(eventType)) {
             changeType = ConfigChangeType.ADDED;
         } else if (value == null) {
@@ -105,10 +106,12 @@ public class CacheListener implements DataListener {
         } else {
             changeType = ConfigChangeType.MODIFIED;
         }
+        // path的"/"替换为"."
         String key = pathToKey(path);
 
         ConfigChangedEvent configChangeEvent = new ConfigChangedEvent(key, getGroup(path), (String) value, changeType);
         Set<ConfigurationListener> listeners = keyListeners.get(path);
+        // 通知所有的监听器
         if (CollectionUtils.isNotEmpty(listeners)) {
             listeners.forEach(listener -> listener.process(configChangeEvent));
         }

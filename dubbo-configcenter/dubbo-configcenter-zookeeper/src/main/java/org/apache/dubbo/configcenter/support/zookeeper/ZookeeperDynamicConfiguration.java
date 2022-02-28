@@ -37,12 +37,13 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class ZookeeperDynamicConfiguration extends TreePathDynamicConfiguration {
-
+    // 用于执行监听器的线程池
     private Executor executor;
     // The final root path would be: /configRootPath/"config"
+    // 所有配置节点的根路径, 默认/dubbo/config
     private String rootPath;
     private final ZookeeperClient zkClient;
-
+    // 监听配置变化的监听器(数据监听器)
     private CacheListener cacheListener;
     private URL url;
     private static final int DEFAULT_ZK_EXECUTOR_THREADS_NUM = 1;
@@ -52,6 +53,7 @@ public class ZookeeperDynamicConfiguration extends TreePathDynamicConfiguration 
     ZookeeperDynamicConfiguration(URL url, ZookeeperTransporter zookeeperTransporter) {
         super(url);
         this.url = url;
+        // 默认/dubbo/config
         rootPath = getRootPath(url);
 
         this.cacheListener = new CacheListener(rootPath);

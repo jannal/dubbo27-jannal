@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.common.context.FrameworkExt</OriginalElement>
+  <nodes>
+    <node x="209.0" y="312.0">org.apache.dubbo.common.context.Lifecycle</node>
+    <node x="231.5" y="124.0">org.apache.dubbo.common.extension.SPI</node>
+    <node x="177.5" y="454.0">org.apache.dubbo.common.context.LifecycleAdapter</node>
+    <node x="188.0" y="213.0">org.apache.dubbo.common.context.FrameworkExt</node>
+    <node x="-54.0" y="448.0">org.apache.dubbo.config.context.ConfigManager</node>
+    <node x="11.5" y="312.0">org.apache.dubbo.common.config.Environment</node>
+    <node x="383.0" y="312.0">org.apache.dubbo.rpc.model.ServiceRepository</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.rpc.model.ServiceRepository" target="org.apache.dubbo.common.context.Lifecycle" relationship="REALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.Environment" target="org.apache.dubbo.common.context.LifecycleAdapter" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.context.LifecycleAdapter" target="org.apache.dubbo.common.context.Lifecycle" relationship="REALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.model.ServiceRepository" target="org.apache.dubbo.common.context.LifecycleAdapter" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="org.apache.dubbo.config.context.ConfigManager" target="org.apache.dubbo.common.context.LifecycleAdapter" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.context.FrameworkExt" target="org.apache.dubbo.common.context.Lifecycle" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.config.Environment" target="org.apache.dubbo.common.context.Lifecycle" relationship="REALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.context.FrameworkExt" target="org.apache.dubbo.common.extension.SPI" relationship="ANNOTATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="org.apache.dubbo.config.context.ConfigManager" target="org.apache.dubbo.common.context.Lifecycle" relationship="REALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.85" showDependencies="false" x="283.0" y="241.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

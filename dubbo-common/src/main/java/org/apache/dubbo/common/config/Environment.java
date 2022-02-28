@@ -38,18 +38,24 @@ public class Environment extends LifecycleAdapter implements FrameworkExt {
     public static final String NAME = "environment";
 
     private final PropertiesConfiguration propertiesConfiguration;
+    // 从 Java Properties 配置（-D配置参数）中获取相应的配置项
     private final SystemConfiguration systemConfiguration;
+    // 从环境变量中获取相应的配置
     private final EnvironmentConfiguration environmentConfiguration;
+    // 内存中维护一个Map,全局配置dubbo.properties
     private final InmemoryConfiguration externalConfiguration;
+    // 应用级别配置application.dubbo.properties
     private final InmemoryConfiguration appExternalConfiguration;
-
+    // 组合非动态配置
     private CompositeConfiguration globalConfiguration;
+    // 组合全部配置中心对应的配置
     private CompositeConfiguration dynamicGlobalConfiguration;
 
-
+    // 全局配置
     private Map<String, String> externalConfigurationMap = new HashMap<>();
+    // 应用级别配置
     private Map<String, String> appExternalConfigurationMap = new HashMap<>();
-
+    // 用于标识配置中心的配置是否为最高优先级。
     private boolean configCenterFirst = true;
 
     private DynamicConfiguration dynamicConfiguration;
@@ -64,6 +70,7 @@ public class Environment extends LifecycleAdapter implements FrameworkExt {
 
     @Override
     public void initialize() throws IllegalStateException {
+        //通过SPI获取ConfigManager
         ConfigManager configManager = ApplicationModel.getConfigManager();
         Optional<Collection<ConfigCenterConfig>> defaultConfigs = configManager.getDefaultConfigCenter();
         defaultConfigs.ifPresent(configs -> {
