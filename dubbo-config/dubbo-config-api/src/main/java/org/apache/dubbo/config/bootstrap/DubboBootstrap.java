@@ -633,10 +633,11 @@ public class DubboBootstrap {
         useRegistryAsMetadataCenterIfNecessary();
 
         ApplicationConfig applicationConfig = getApplication();
-
+        // 默认null，如果设置为remote，则必须配置一个元数据中心
         String metadataType = applicationConfig.getMetadataType();
         // FIXME, multiple metadata config support.
         Collection<MetadataReportConfig> metadataReportConfigs = configManager.getMetadataConfigs();
+        // 如果没有元数据中心的配置项，metadataType必须设置为remote
         if (CollectionUtils.isEmpty(metadataReportConfigs)) {
             if (REMOTE_METADATA_STORAGE_TYPE.equals(metadataType)) {
                 throw new IllegalStateException("No MetadataConfig found, Metadata Center address is required when 'metadata=remote' is enabled.");
@@ -716,6 +717,7 @@ public class DubboBootstrap {
 
     private void useRegistryAsMetadataCenterIfNecessary() {
 
+        // 获取所有元数据中心的配置项
         Collection<MetadataReportConfig> metadataConfigs = configManager.getMetadataConfigs();
 
         if (CollectionUtils.isNotEmpty(metadataConfigs)) {

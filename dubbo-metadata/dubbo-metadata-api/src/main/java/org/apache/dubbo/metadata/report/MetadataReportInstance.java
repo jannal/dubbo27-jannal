@@ -46,7 +46,9 @@ public class MetadataReportInstance {
         }
         MetadataReportFactory metadataReportFactory = ExtensionLoader.getExtensionLoader(MetadataReportFactory.class).getAdaptiveExtension();
         URL url = config.toUrl();
+        // protocol是metadata
         if (METADATA_REPORT_KEY.equals(url.getProtocol())) {
+            // 以zk为例，这里protocol是zookeeper
             String protocol = url.getParameter(METADATA_REPORT_KEY, DEFAULT_DIRECTORY);
             url = URLBuilder.from(url)
                     .setProtocol(protocol)
@@ -54,6 +56,7 @@ public class MetadataReportInstance {
                     .build();
         }
         url = url.addParameterIfAbsent(APPLICATION_KEY, ApplicationModel.getApplicationConfig().getName());
+        // 元数据中心注册ID，用于标识唯一性
         String relatedRegistryId = config.getRegistry() == null ? DEFAULT_KEY : config.getRegistry();
 //        RegistryConfig registryConfig = ApplicationModel.getConfigManager().getRegistry(relatedRegistryId)
 //                .orElseThrow(() -> new IllegalStateException("Registry id " + relatedRegistryId + " does not exist."));

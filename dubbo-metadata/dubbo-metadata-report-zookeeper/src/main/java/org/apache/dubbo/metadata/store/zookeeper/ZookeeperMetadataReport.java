@@ -68,6 +68,7 @@ public class ZookeeperMetadataReport extends AbstractMetadataReport {
         if (!group.startsWith(PATH_SEPARATOR)) {
             group = PATH_SEPARATOR + group;
         }
+        //默认是 /dubbo
         this.root = group;
         zkClient = zookeeperTransporter.connect(url);
     }
@@ -128,6 +129,7 @@ public class ZookeeperMetadataReport extends AbstractMetadataReport {
     }
 
     String getNodePath(BaseMetadataIdentifier metadataIdentifier) {
+        // 格式类似/dubbo/metadata/cn.jannal.dubbo.facade.DemoService/provider/demo-xml-provider
         return toRootDir() + metadataIdentifier.getUniqueKey(KeyTypeEnum.PATH);
     }
 
@@ -151,6 +153,7 @@ public class ZookeeperMetadataReport extends AbstractMetadataReport {
 
     @Override
     public MetadataInfo getAppMetadata(SubscriberMetadataIdentifier identifier, Map<String, String> instanceMetadata) {
+        // 类似 /dubbo/metadata/demo-xml-provider/0D66B8FBE6C5B822427B726F4F30B56E
         String content = zkClient.getContent(getNodePath(identifier));
         return gson.fromJson(content, MetadataInfo.class);
     }

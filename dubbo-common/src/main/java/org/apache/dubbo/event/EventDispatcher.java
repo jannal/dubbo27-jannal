@@ -34,12 +34,13 @@ public interface EventDispatcher extends Listenable<EventListener<?>> {
 
     /**
      * Direct {@link Executor} uses sequential execution model
+     * 该线程池用于串行调用被触发的EventListener，也就是direct模式
      */
     Executor DIRECT_EXECUTOR = Runnable::run;
 
     /**
      * Dispatch a Dubbo event to the registered {@link EventListener Dubbo event listeners}
-     *
+     * 将被触发的事件分发给相应的EventListener对象
      * @param event a {@link Event Dubbo event}
      */
     void dispatch(Event event);

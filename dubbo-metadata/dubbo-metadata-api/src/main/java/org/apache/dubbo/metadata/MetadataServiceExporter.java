@@ -38,28 +38,28 @@ public interface MetadataServiceExporter extends Prioritized {
 
     /**
      * Exports the {@link MetadataService} as a Dubbo service
-     *
+     * 将MetadataService作为一个Dubbo服务导出
      * @return {@link MetadataServiceExporter itself}
      */
     MetadataServiceExporter export();
 
     /**
      * Unexports the {@link MetadataService}
-     *
+     * 将MetadataService作为一个Dubbo服务注销
      * @return {@link MetadataServiceExporter itself}
      */
     MetadataServiceExporter unexport();
 
     /**
      * Get the {@link URL URLs} that were exported
-     *
+     * MetadataService可能以多种协议发布，这里返回发布MetadataService服务的所有URL
      * @return non-null
      */
     List<URL> getExportedURLs();
 
     /**
      * {@link MetadataService} is export or not
-     *
+     *  MetadataService服务是否已经发布
      * @return if {@link #export()} was executed, return <code>true</code>, or <code>false</code>
      */
     boolean isExported();

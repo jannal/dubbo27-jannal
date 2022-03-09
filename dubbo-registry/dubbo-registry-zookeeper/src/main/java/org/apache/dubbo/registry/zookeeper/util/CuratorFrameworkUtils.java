@@ -90,11 +90,22 @@ public abstract class CuratorFrameworkUtils {
         return serviceInstance;
     }
 
+    //将Dubbo中的ServiceInstance对象转换成Curator中的ServiceInstance对象
     public static org.apache.curator.x.discovery.ServiceInstance<ZookeeperInstance> build(ServiceInstance serviceInstance) {
         ServiceInstanceBuilder builder = null;
+        // 获取应用名称
         String serviceName = serviceInstance.getServiceName();
         String host = serviceInstance.getHost();
         int port = serviceInstance.getPort();
+        /**
+         * 元数据类似
+         * {
+         *     "dubbo.metadata-service.url-params": "{\"dubbo\":{\"version\":\"1.0.0\",\"dubbo\":\"2.0.2\",\"release\":\"2.7.15\",\"port\":\"20881\"}}",
+         *     "dubbo.endpoints": "[{\"port\":20880,\"protocol\":\"dubbo\"}]",
+         *     "dubbo.metadata.revision": "0D66B8FBE6C5B822427B726F4F30B56E",
+         *     "dubbo.metadata.storage-type": "local"
+         * }
+         */
         Map<String, String> metadata = serviceInstance.getMetadata();
         String id = generateId(host, port);
         ZookeeperInstance zookeeperInstance = new ZookeeperInstance(null, serviceName, metadata);

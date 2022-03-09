@@ -124,9 +124,13 @@ public class ServiceDiscoveryRegistry implements Registry {
 
     public ServiceDiscoveryRegistry(URL registryURL) {
         this.registryURL = registryURL;
+        // 扩展接口创建serviceDiscovery对象
         this.serviceDiscovery = createServiceDiscovery(registryURL);
+        // parameters属性设置参数subscribed-services值
         this.subscribedServices = parseServices(registryURL.getParameter(SUBSCRIBED_SERVICE_NAMES_KEY));
+        // 默认是DynamicConfigurationServiceNameMapping，即配置中心获取
         this.serviceNameMapping = ServiceNameMapping.getExtension(registryURL.getParameter(MAPPING_KEY));
+        // 获取元数据中心对象， 默认是InMemoryWritableMetadataService
         this.writableMetadataService = WritableMetadataService.getDefaultExtension();
     }
 
@@ -180,7 +184,7 @@ public class ServiceDiscoveryRegistry implements Registry {
     protected boolean shouldRegister(URL providerURL) {
 
         String side = providerURL.getParameter(SIDE_KEY);
-
+        // 只有服务端才能注册
         boolean should = PROVIDER_SIDE.equals(side); // Only register the Provider.
 
         if (!should) {
@@ -209,6 +213,7 @@ public class ServiceDiscoveryRegistry implements Registry {
         if (registryCluster != null && url.getParameter(REGISTRY_CLUSTER_KEY) == null) {
             url = url.addParameter(REGISTRY_CLUSTER_KEY, registryCluster);
         }
+        // 注册到元数据中心（默认注册到本地内存中）
         if (writableMetadataService.exportURL(url)) {
             if (logger.isInfoEnabled()) {
                 logger.info(format("The URL[%s] registered successfully.", url.toString()));
@@ -372,6 +377,12 @@ public class ServiceDiscoveryRegistry implements Registry {
     protected Set<String> getServices(URL subscribedURL, final NotifyListener listener) {
         Set<String> subscribedServices = new TreeSet<>();
 
+        /**
+         *  查找服务的应用名，三种查找方式
+         *  1. provided-by参数指定，多个应用名使用逗号分隔
+         *  2. 访问配置中心获取应用名
+         *  3. subscribed-services参数指定，多个应用名使用逗号分隔
+         */
         String serviceNames = subscribedURL.getParameter(PROVIDED_BY);
         if (StringUtils.isNotEmpty(serviceNames)) {
             logger.info(subscribedURL.getServiceInterface() + " mapping to " + serviceNames + " instructed by provided-by set by user.");

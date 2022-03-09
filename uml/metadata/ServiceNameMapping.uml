@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.metadata.ServiceNameMapping</OriginalElement>
+  <nodes>
+    <node x="345.5" y="0.0">org.apache.dubbo.common.extension.SPI</node>
+    <node x="0.0" y="156.0">org.apache.dubbo.metadata.DynamicConfigurationServiceNameMapping</node>
+    <node x="419.0" y="156.0">org.apache.dubbo.registry.client.metadata.MetadataServiceNameMapping</node>
+    <node x="272.0" y="78.0">org.apache.dubbo.metadata.ServiceNameMapping</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.registry.client.metadata.MetadataServiceNameMapping" target="org.apache.dubbo.metadata.ServiceNameMapping" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="567.5" y="131.0" />
+      <point x="383.5" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.DynamicConfigurationServiceNameMapping" target="org.apache.dubbo.metadata.ServiceNameMapping" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="199.5" y="131.0" />
+      <point x="383.5" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.ServiceNameMapping" target="org.apache.dubbo.common.extension.SPI" relationship="ANNOTATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.85" showDependencies="false" x="567.5" y="80.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

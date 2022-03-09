@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.registry.client.ServiceDiscovery</OriginalElement>
+  <nodes>
+    <node x="556.0" y="320.0">org.apache.dubbo.registry.etcd.EtcdServiceDiscovery</node>
+    <node x="536.0" y="78.0">org.apache.dubbo.common.lang.Prioritized</node>
+    <node x="789.5" y="240.0">org.apache.dubbo.registry.client.AbstractServiceDiscovery</node>
+    <node x="0.0" y="320.0">org.apache.dubbo.registry.consul.ConsulServiceDiscovery</node>
+    <node x="1604.0" y="320.0">org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscovery</node>
+    <node x="1056.0" y="320.0">org.apache.dubbo.registry.client.InMemoryServiceDiscovery</node>
+    <node x="884.5" y="78.0">org.apache.dubbo.common.extension.SPI</node>
+    <node x="262.0" y="320.0">org.apache.dubbo.registry.client.FileSystemServiceDiscovery</node>
+    <node x="823.5" y="158.0">org.apache.dubbo.registry.client.ServiceDiscovery</node>
+    <node x="513.0" y="0.0">java.lang.Comparable</node>
+    <node x="799.0" y="320.0">org.apache.dubbo.registry.nacos.NacosServiceDiscovery</node>
+    <node x="1342.0" y="320.0">org.apache.dubbo.registry.eureka.EurekaServiceDiscovery</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.registry.client.InMemoryServiceDiscovery" target="org.apache.dubbo.registry.client.AbstractServiceDiscovery" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1189.0" y="299.0" />
+      <point x="917.5" y="299.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.client.FileSystemServiceDiscovery" target="org.apache.dubbo.common.lang.Prioritized" relationship="REALIZATION">
+      <point x="-68.5" y="-14.0" />
+      <point x="330.5" y="289.0" />
+      <point x="246.0" y="289.0" />
+      <point x="246.0" y="137.0" />
+      <point x="137.37" y="137.0" />
+      <point x="137.37" y="127.0" />
+      <point x="569.0" y="127.0" />
+      <point x="-33.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.nacos.NacosServiceDiscovery" target="org.apache.dubbo.registry.client.AbstractServiceDiscovery" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.client.ServiceDiscovery" target="org.apache.dubbo.common.lang.Prioritized" relationship="INTERFACE_GENERALIZATION">
+      <point x="-47.0" y="-14.0" />
+      <point x="870.5" y="137.0" />
+      <point x="635.0000000000001" y="137.0" />
+      <point x="33.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.client.FileSystemServiceDiscovery" target="org.apache.dubbo.registry.client.AbstractServiceDiscovery" relationship="GENERALIZATION">
+      <point x="68.5" y="-14.0" />
+      <point x="467.5" y="299.0" />
+      <point x="917.5" y="299.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.common.lang.Prioritized" target="java.lang.Comparable" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.eureka.EurekaServiceDiscovery" target="org.apache.dubbo.registry.client.AbstractServiceDiscovery" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1463.0" y="299.0" />
+      <point x="917.5" y="299.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.etcd.EtcdServiceDiscovery" target="org.apache.dubbo.registry.client.AbstractServiceDiscovery" relationship="GENERALIZATION">
+      <point x="55.75" y="-14.0" />
+      <point x="723.25" y="299.0" />
+      <point x="917.5" y="299.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.consul.ConsulServiceDiscovery" target="org.apache.dubbo.common.lang.Prioritized" relationship="REALIZATION">
+      <point x="-60.5" y="-14.0" />
+      <point x="60.5" y="299.0" />
+      <point x="65.63249999999994" y="299.0" />
+      <point x="65.63249999999994" y="137.0" />
+      <point x="137.37" y="137.0" />
+      <point x="137.37" y="127.0" />
+      <point x="569.0" y="127.0" />
+      <point x="-33.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.client.ServiceDiscovery" target="org.apache.dubbo.common.extension.SPI" relationship="ANNOTATION">
+      <point x="47.0" y="-14.0" />
+      <point x="964.5" y="137.0" />
+      <point x="922.5" y="137.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.client.AbstractServiceDiscovery" target="org.apache.dubbo.registry.client.ServiceDiscovery" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.consul.ConsulServiceDiscovery" target="org.apache.dubbo.registry.client.AbstractServiceDiscovery" relationship="GENERALIZATION">
+      <point x="60.5" y="-14.0" />
+      <point x="181.5" y="299.0" />
+      <point x="917.5" y="299.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.etcd.EtcdServiceDiscovery" target="org.apache.dubbo.common.lang.Prioritized" relationship="REALIZATION">
+      <point x="-55.75" y="-14.0" />
+      <point x="611.75" y="289.0" />
+      <point x="391.625" y="289.0" />
+      <point x="391.625" y="137.0" />
+      <point x="137.37" y="137.0" />
+      <point x="137.37" y="127.0" />
+      <point x="569.0" y="127.0" />
+      <point x="-33.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscovery" target="org.apache.dubbo.registry.client.AbstractServiceDiscovery" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1740.5" y="299.0" />
+      <point x="917.5" y="299.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.607511860832894" showDependencies="false" x="957.5" y="333.99999999999994" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

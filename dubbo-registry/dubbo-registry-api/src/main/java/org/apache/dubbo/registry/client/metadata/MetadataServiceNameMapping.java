@@ -39,6 +39,7 @@ public class MetadataServiceNameMapping implements ServiceNameMapping {
     public void map(URL url) {
         String serviceInterface = url.getServiceInterface();
 
+        // 忽略MetadataService接口
         if (IGNORED_SERVICE_INTERFACES.contains(serviceInterface)) {
             return;
         }

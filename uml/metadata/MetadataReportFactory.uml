@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.metadata.report.MetadataReportFactory</OriginalElement>
+  <nodes>
+    <node x="293.0" y="234.0">org.apache.dubbo.metadata.store.failover.FailoverMetadataReportFactory</node>
+    <node x="1059.5" y="0.0">org.apache.dubbo.common.extension.SPI</node>
+    <node x="1562.0" y="234.0">org.apache.dubbo.metadata.store.consul.ConsulMetadataReportFactory</node>
+    <node x="945.0" y="156.0">org.apache.dubbo.metadata.report.support.AbstractMetadataReportFactory</node>
+    <node x="954.0" y="234.0">org.apache.dubbo.metadata.store.nacos.NacosMetadataReportFactory</node>
+    <node x="612.0" y="234.0">org.apache.dubbo.metadata.store.zookeeper.ZookeeperMetadataReportFactory</node>
+    <node x="0.0" y="234.0">org.apache.dubbo.metadata.store.etcd.EtcdMetadataReportFactory</node>
+    <node x="979.0" y="78.0">org.apache.dubbo.metadata.report.MetadataReportFactory</node>
+    <node x="1874.0" y="234.0">org.apache.dubbo.metadata.store.failover.MockMetadataReportFactory</node>
+    <node x="1261.0" y="234.0">org.apache.dubbo.metadata.store.redis.RedisMetadataReportFactory</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.metadata.store.redis.RedisMetadataReportFactory" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReportFactory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1401.5" y="209.0" />
+      <point x="1097.5" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.store.zookeeper.ZookeeperMetadataReportFactory" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReportFactory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="773.0" y="209.0" />
+      <point x="1097.5" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.store.etcd.EtcdMetadataReportFactory" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReportFactory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="136.5" y="209.0" />
+      <point x="1097.5" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.store.nacos.NacosMetadataReportFactory" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReportFactory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.store.consul.ConsulMetadataReportFactory" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReportFactory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1708.0" y="209.0" />
+      <point x="1097.5" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.report.support.AbstractMetadataReportFactory" target="org.apache.dubbo.metadata.report.MetadataReportFactory" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.store.failover.FailoverMetadataReportFactory" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReportFactory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="442.5" y="209.0" />
+      <point x="1097.5" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.store.failover.MockMetadataReportFactory" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReportFactory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="2014.0" y="209.0" />
+      <point x="1097.5" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.report.MetadataReportFactory" target="org.apache.dubbo.common.extension.SPI" relationship="ANNOTATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.5499999999999999" showDependencies="false" x="1158.3636363636365" y="248.0000000000001" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

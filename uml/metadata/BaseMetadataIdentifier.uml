@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.metadata.report.identifier.BaseMetadataIdentifier</OriginalElement>
+  <nodes>
+    <node x="0.0" y="0.0">org.apache.dubbo.metadata.report.identifier.BaseMetadataIdentifier</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="117.5" y="14.0" />
+  <SelectedNodes>
+    <node>org.apache.dubbo.metadata.report.identifier.BaseMetadataIdentifier</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

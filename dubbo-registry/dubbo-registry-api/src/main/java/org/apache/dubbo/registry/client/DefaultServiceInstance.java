@@ -34,20 +34,21 @@ public class DefaultServiceInstance implements ServiceInstance {
     private static final long serialVersionUID = 1149677083747278100L;
 
     private String id;
-
+    // 应用名，在注册中心全局唯一
     private String serviceName;
 
     private String host;
 
     private Integer port;
-
+    // 激活状态：当前实例是否对外提供服务
     private boolean enabled;
-
+    // 检测当前ServiceInstance的状态
     private boolean healthy;
-
+    // 获取当前ServiceInstance关联的元数据，这些元数据以KV格式存储
     private Map<String, String> metadata = new HashMap<>();
 
     private transient String address;
+    // 服务实例的附加信息，用于存储 Dubbo 元信息，类似于通讯协议头或附件
     private transient MetadataInfo serviceMetadata;
     // used at runtime
     private transient Map<String, String> extendParams = new HashMap<>();

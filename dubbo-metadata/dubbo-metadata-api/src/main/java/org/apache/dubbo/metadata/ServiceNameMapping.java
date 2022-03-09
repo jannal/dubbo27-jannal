@@ -36,12 +36,13 @@ public interface ServiceNameMapping {
 
     /**
      * Map the specified Dubbo service interface, group, version and protocol to current Dubbo service name
+     * 服务接口、group、version、protocol => interface ID，并与当前Service Name之间形成映射
      */
     void map(URL url);
 
     /**
      * Get the service names from the specified Dubbo service interface, group, version and protocol
-     *
+     * 服务接口、group、version、protocol => interface ID，查询对应的Service Name
      * @return
      */
     Set<String> getAndListen(URL url, MappingListener mappingListener);

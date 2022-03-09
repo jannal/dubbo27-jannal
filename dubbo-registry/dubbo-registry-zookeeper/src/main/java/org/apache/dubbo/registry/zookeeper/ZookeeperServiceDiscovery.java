@@ -71,9 +71,13 @@ public class ZookeeperServiceDiscovery extends AbstractServiceDiscovery {
     @Override
     public void initialize(URL registryURL) throws Exception {
         this.registryURL = registryURL;
+        // 构建客户端
         this.curatorFramework = buildCuratorFramework(registryURL);
+        // 默认是/services
         this.rootPath = ROOT_PATH.getParameterValue(registryURL);
+        // 初始化Curator ServiceDiscovery并启动
         this.serviceDiscovery = buildServiceDiscovery(curatorFramework, rootPath);
+        // 初始化
         this.serviceDiscovery.start();
     }
 

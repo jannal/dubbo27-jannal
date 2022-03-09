@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.metadata.report.MetadataReport</OriginalElement>
+  <nodes>
+    <node x="531.0" y="156.0">org.apache.dubbo.metadata.store.consul.ConsulMetadataReport</node>
+    <node x="1018.0" y="156.0">org.apache.dubbo.metadata.store.redis.RedisMetadataReport</node>
+    <node x="784.0" y="156.0">org.apache.dubbo.metadata.store.etcd.EtcdMetadataReport</node>
+    <node x="0.0" y="156.0">org.apache.dubbo.metadata.store.zookeeper.ZookeeperMetadataReport</node>
+    <node x="524.5" y="78.0">org.apache.dubbo.metadata.report.support.AbstractMetadataReport</node>
+    <node x="558.5" y="0.0">org.apache.dubbo.metadata.report.MetadataReport</node>
+    <node x="283.00000000000006" y="156.0">org.apache.dubbo.metadata.store.nacos.NacosMetadataReport</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.metadata.store.consul.ConsulMetadataReport" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReport" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.store.zookeeper.ZookeeperMetadataReport" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReport" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="131.5" y="131.0" />
+      <point x="647.5" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.store.redis.RedisMetadataReport" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReport" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1129.0" y="131.0" />
+      <point x="647.5" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.report.support.AbstractMetadataReport" target="org.apache.dubbo.metadata.report.MetadataReport" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.store.etcd.EtcdMetadataReport" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReport" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="891.0" y="131.0" />
+      <point x="647.5" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.metadata.store.nacos.NacosMetadataReport" target="org.apache.dubbo.metadata.report.support.AbstractMetadataReport" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="397.00000000000006" y="131.0" />
+      <point x="647.5" y="131.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.85" showDependencies="false" x="690.0" y="170.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -32,7 +32,7 @@ import static org.apache.dubbo.common.utils.StringUtils.isEmpty;
 
 /**
  * MetadataReportConfig
- *
+ * 元数据中心配置项
  * @export
  */
 public class MetadataReportConfig extends AbstractConfig {

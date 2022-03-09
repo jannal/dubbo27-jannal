@@ -48,10 +48,11 @@ public class DynamicConfigurationServiceNameMapping implements ServiceNameMappin
         String serviceInterface = url.getServiceInterface();
         String group = url.getParameter(GROUP_KEY);
 
+        // 跳过MetadataService的映射
         if (IGNORED_SERVICE_INTERFACES.contains(serviceInterface)) {
             return;
         }
-
+        // 获取配置中心对象
         DynamicConfiguration dynamicConfiguration = DynamicConfiguration.getDynamicConfiguration();
 
         // the Dubbo Service Key as group
@@ -61,6 +62,7 @@ public class DynamicConfigurationServiceNameMapping implements ServiceNameMappin
         String content = valueOf(System.currentTimeMillis());
 
         execute(() -> {
+            // 将映射关系发布到配置中心，服务接口（Interface ID）=> Service Name的映射
             dynamicConfiguration.publishConfig(key, ServiceNameMapping.buildGroup(serviceInterface), content);
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Dubbo service[%s] mapped to interface name[%s].",
@@ -76,6 +78,7 @@ public class DynamicConfigurationServiceNameMapping implements ServiceNameMappin
 
         Set<String> serviceNames = new LinkedHashSet<>();
         execute(() -> {
+            // 根据Interface ID从配置查找Service Name
             Set<String> keys = dynamicConfiguration
                     .getConfigKeys(ServiceNameMapping.buildGroup(serviceInterface));
             if (CollectionUtils.isNotEmpty(keys)) {

@@ -33,9 +33,10 @@ import java.util.Set;
 public interface MetadataReport {
     /**
      * Service Definition -- START
+     *
      **/
     void storeProviderMetadata(MetadataIdentifier providerMetadataIdentifier, ServiceDefinition serviceDefinition);
-
+    // 查询ServiceDefinition
     String getServiceDefinition(MetadataIdentifier metadataIdentifier);
 
     /**

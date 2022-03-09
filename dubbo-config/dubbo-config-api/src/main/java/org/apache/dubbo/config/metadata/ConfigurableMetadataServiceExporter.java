@@ -69,11 +69,11 @@ public class ConfigurableMetadataServiceExporter implements MetadataServiceExpor
             ServiceConfig<MetadataService> serviceConfig = new ServiceConfig<>();
             serviceConfig.setApplication(getApplicationConfig());
             serviceConfig.setRegistries(getRegistries());
-            serviceConfig.setProtocol(generateMetadataProtocol());
+            serviceConfig.setProtocol(generateMetadataProtocol()); // Dubbo协议
             serviceConfig.setInterface(MetadataService.class);
             serviceConfig.setRef(metadataService);
             serviceConfig.setGroup(getApplicationConfig().getName());
-            serviceConfig.setVersion(metadataService.version());
+            serviceConfig.setVersion(metadataService.version()); // 默认1.0.0
 
             // export
             serviceConfig.export();

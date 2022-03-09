@@ -74,6 +74,7 @@ public class InMemoryWritableMetadataService implements WritableMetadataService 
     /**
      * All exported {@link URL urls} {@link Map} whose key is the return value of {@link URL#getServiceKey()} method
      * and value is the {@link SortedSet sorted set} of the {@link URL URLs}
+     * 当前发布的URL集合，key是ServiceKey（interface、group、version），Value是对应的URL集合
      */
     ConcurrentNavigableMap<String, SortedSet<URL>> exportedServiceURLs = new ConcurrentSkipListMap<>();
     ConcurrentMap<String, MetadataInfo> metadataInfos;
@@ -87,9 +88,10 @@ public class InMemoryWritableMetadataService implements WritableMetadataService 
      * The subscribed {@link URL urls} {@link Map} of {@link MetadataService},
      * whose key is the return value of {@link URL#getServiceKey()} method and value is
      * the {@link SortedSet sorted set} of the {@link URL URLs}
+     * 当前引用的URL集合，key是ServiceKey（interface、group、version），Value是对应的URL集合
      */
     ConcurrentNavigableMap<String, SortedSet<URL>> subscribedServiceURLs = new ConcurrentSkipListMap<>();
-
+    // 用于记录当前发布的 ServiceDefinition 信息，Key 为 Provider URL 的ServiceKey，Value 为对应的 ServiceDefinition 对象序列化之后的 JSON 字符串
     ConcurrentNavigableMap<String, String> serviceDefinitions = new ConcurrentSkipListMap<>();
 
     public InMemoryWritableMetadataService() {
@@ -168,11 +170,14 @@ public class InMemoryWritableMetadataService implements WritableMetadataService 
     public void publishServiceDefinition(URL providerUrl) {
         try {
             if (!ProtocolUtils.isGeneric(providerUrl.getParameter(GENERIC_KEY))) {
+                // 获取接口名
                 String interfaceName = providerUrl.getParameter(INTERFACE_KEY);
                 if (StringUtils.isNotEmpty(interfaceName)) {
                     Class interfaceClass = Class.forName(interfaceName);
+                    // 构建服务接口对应的ServiceDefinition
                     ServiceDefinition serviceDefinition = ServiceDefinitionBuilder.build(interfaceClass);
                     String data = JSON.toJSONString(serviceDefinition);
+                    // 将ServiceDefinition序列化后的JSON字符串记录到serviceDefinitions集合
                     serviceDefinitions.put(providerUrl.getServiceKey(), data);
                     return;
                 }

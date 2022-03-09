@@ -70,7 +70,7 @@ public interface MetadataService {
 
     /**
      * Gets the current Dubbo Service name
-     *
+     * 获取当前Dubbo的服务名称
      * @return non-null
      */
     String serviceName();

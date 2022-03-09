@@ -23,6 +23,7 @@ import java.util.Map;
  */
 public class FullServiceDefinition extends ServiceDefinition {
 
+    // 存储URL上的参数
     private Map<String, String> parameters;
 
     public Map<String, String> getParameters() {
