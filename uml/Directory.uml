@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.rpc.cluster.Directory</OriginalElement>
+  <nodes>
+    <node x="372.74999999999994" y="78.0">org.apache.dubbo.rpc.cluster.Directory</node>
+    <node x="404.24999999999994" y="0.0">org.apache.dubbo.common.Node</node>
+    <node x="0.0" y="312.0">org.apache.dubbo.registry.client.ServiceDiscoveryRegistryDirectory</node>
+    <node x="466.49999999999994" y="234.0">org.apache.dubbo.rpc.cluster.directory.StaticDirectory</node>
+    <node x="378.99999999999994" y="312.0">org.apache.dubbo.registry.integration.RegistryDirectory</node>
+    <node x="222.49999999999994" y="234.0">org.apache.dubbo.registry.integration.DynamicDirectory</node>
+    <node x="339.24999999999994" y="156.0">org.apache.dubbo.rpc.cluster.directory.AbstractDirectory</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.rpc.cluster.Directory" target="org.apache.dubbo.common.Node" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.directory.AbstractDirectory" target="org.apache.dubbo.rpc.cluster.Directory" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.integration.DynamicDirectory" target="org.apache.dubbo.rpc.cluster.directory.AbstractDirectory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="334.49999999999994" y="209.0" />
+      <point x="450.74999999999994" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.client.ServiceDiscoveryRegistryDirectory" target="org.apache.dubbo.registry.integration.DynamicDirectory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="179.5" y="287.0" />
+      <point x="334.49999999999994" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.directory.StaticDirectory" target="org.apache.dubbo.rpc.cluster.directory.AbstractDirectory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="567.0" y="209.0" />
+      <point x="450.74999999999994" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.integration.RegistryDirectory" target="org.apache.dubbo.registry.integration.DynamicDirectory" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="489.49999999999994" y="287.0" />
+      <point x="334.49999999999994" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="334.0" y="170.0" />
+  <SelectedNodes>
+    <node>org.apache.dubbo.rpc.cluster.directory.StaticDirectory</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

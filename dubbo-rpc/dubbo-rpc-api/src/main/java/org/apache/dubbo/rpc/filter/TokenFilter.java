@@ -33,6 +33,7 @@ import static org.apache.dubbo.rpc.Constants.TOKEN_KEY;
 /**
  * Perform check whether given provider token is matching with remote token or not. If it does not match
  * it will not allow to invoke remote method.
+ * 1. 下发令牌给provider，通常用于防止consumer绕过注册中心直接调用provider
  *
  * @see Filter
  */
@@ -42,10 +43,12 @@ public class TokenFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation inv)
             throws RpcException {
+        // 服务提供者的token
         String token = invoker.getUrl().getParameter(TOKEN_KEY);
         if (ConfigUtils.isNotEmpty(token)) {
             Class<?> serviceType = invoker.getInterface();
             Map<String, Object> attachments = inv.getObjectAttachments();
+            // 客户端请求带过来的token
             String remoteToken = (attachments == null ? null : (String) attachments.get(TOKEN_KEY));
             if (!token.equals(remoteToken)) {
                 throw new RpcException("Invalid token! Forbid invoke remote service " + serviceType + " method " + inv.getMethodName()

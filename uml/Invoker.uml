@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.rpc.Invoker</OriginalElement>
+  <nodes>
+    <node x="1361.25" y="156.0">org.apache.dubbo.rpc.protocol.AbstractInvoker</node>
+    <node x="1680.0" y="312.0">org.apache.dubbo.rpc.cluster.support.BroadcastCluster2Invoker</node>
+    <node x="277.0" y="312.0">org.apache.dubbo.rpc.cluster.support.FailfastClusterInvoker</node>
+    <node x="1988.0" y="312.0">org.apache.dubbo.rpc.cluster.support.registry.ZoneAwareClusterInvoker</node>
+    <node x="0.0" y="312.0">org.apache.dubbo.rpc.cluster.support.ForkingClusterInvoker</node>
+    <node x="1270.25" y="78.0">org.apache.dubbo.rpc.Invoker</node>
+    <node x="1123.0" y="312.0">org.apache.dubbo.rpc.cluster.support.FailoverClusterInvoker</node>
+    <node x="1402.0" y="312.0">org.apache.dubbo.rpc.cluster.support.FailsafeClusterInvoker</node>
+    <node x="1294.25" y="0.0">org.apache.dubbo.common.Node</node>
+    <node x="1013.25" y="156.0">org.apache.dubbo.rpc.cluster.ClusterInvoker</node>
+    <node x="979.75" y="234.0">org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker</node>
+    <node x="1477.75" y="234.0">org.apache.dubbo.rpc.protocol.injvm.InjvmInvoker</node>
+    <node x="552.0" y="312.0">org.apache.dubbo.rpc.cluster.support.AvailableClusterInvoker</node>
+    <node x="841.0" y="312.0">org.apache.dubbo.rpc.cluster.support.FailbackClusterInvoker</node>
+    <node x="1264.75" y="234.0">org.apache.dubbo.rpc.protocol.dubbo.DubboInvoker</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.rpc.cluster.support.BroadcastCluster2Invoker" target="org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1824.0" y="287.0" />
+      <point x="1112.25" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.ClusterInvoker" target="org.apache.dubbo.rpc.Invoker" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1112.25" y="131.0" />
+      <point x="1305.5" y="131.0" />
+      <point x="-35.25" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.support.ForkingClusterInvoker" target="org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="128.5" y="287.0" />
+      <point x="1112.25" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.support.FailfastClusterInvoker" target="org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="404.5" y="287.0" />
+      <point x="1112.25" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.support.AvailableClusterInvoker" target="org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="686.5" y="287.0" />
+      <point x="1112.25" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.dubbo.DubboInvoker" target="org.apache.dubbo.rpc.protocol.AbstractInvoker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1361.25" y="209.0" />
+      <point x="1465.25" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.injvm.InjvmInvoker" target="org.apache.dubbo.rpc.protocol.AbstractInvoker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1569.25" y="209.0" />
+      <point x="1465.25" y="209.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.support.registry.ZoneAwareClusterInvoker" target="org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="2131.0" y="287.0" />
+      <point x="1112.25" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.AbstractInvoker" target="org.apache.dubbo.rpc.Invoker" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1465.25" y="131.0" />
+      <point x="1376.0" y="131.0" />
+      <point x="35.25" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker" target="org.apache.dubbo.rpc.cluster.ClusterInvoker" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.support.FailoverClusterInvoker" target="org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1252.5" y="287.0" />
+      <point x="1112.25" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.support.FailsafeClusterInvoker" target="org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1531.0" y="287.0" />
+      <point x="1112.25" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.cluster.support.FailbackClusterInvoker" target="org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="972.0" y="287.0" />
+      <point x="1112.25" y="287.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.Invoker" target="org.apache.dubbo.common.Node" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.32863993025283345" showDependencies="false" x="1137.0" y="325.9999999999999" />
+  <SelectedNodes>
+    <node>org.apache.dubbo.rpc.cluster.support.registry.ZoneAwareClusterInvoker</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

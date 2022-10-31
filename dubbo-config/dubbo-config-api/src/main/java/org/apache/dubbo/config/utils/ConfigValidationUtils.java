@@ -192,11 +192,15 @@ public class ConfigValidationUtils {
             for (RegistryConfig config : registries) {
                 String address = config.getAddress();
                 if (StringUtils.isEmpty(address)) {
+                    // 若 address 为空，则将其设为 0.0.0.0
                     address = ANYHOST_VALUE;
                 }
+                // 检测 address 是否合法，address=N/A表示由 dubbo 自动分配地址（直连方式，不通过注册中心）
                 if (!RegistryConfig.NO_AVAILABLE.equalsIgnoreCase(address)) {
                     Map<String, String> map = new HashMap<String, String>();
+                    // 添加 ApplicationConfig 中的字段信息到 map 中
                     AbstractConfig.appendParameters(map, application);
+                    // 添加 RegistryConfig 字段信息到 map 中
                     AbstractConfig.appendParameters(map, config);
                     map.put(PATH_KEY, RegistryService.class.getName());
                     AbstractInterfaceConfig.appendRuntimeParameters(map);
@@ -208,12 +212,15 @@ public class ConfigValidationUtils {
                     if (urls == null) {
                         throw new IllegalStateException(String.format("url should not be null,address is %s", address));
                     }
+                    //address 可能包含多个注册中心 ip
                     for (URL url : urls) {
-
+                        // 将 URL 协议头设置为 registry
                         url = URLBuilder.from(url)
                                 .addParameter(REGISTRY_KEY, url.getProtocol())
                                 .setProtocol(extractRegistryType(url))
                                 .build();
+                        // 是否添加 url 到 registryList 中
+                        // (服务提供者 && register = true 或 null) || (非服务提供者 && subscribe = true 或 null)
                         if ((provider && url.getParameter(REGISTER_KEY, true))
                                 || (!provider && url.getParameter(SUBSCRIBE_KEY, true))) {
                             registryList.add(url);
@@ -309,12 +316,14 @@ public class ConfigValidationUtils {
         if (ConfigUtils.isEmpty(mock)) {
             return;
         }
-
+        // 标准化mock配置字符串
         String normalizedMock = MockInvoker.normalizeMock(mock);
+        // 如果是以return开头
         if (normalizedMock.startsWith(RETURN_PREFIX)) {
             normalizedMock = normalizedMock.substring(RETURN_PREFIX.length()).trim();
             try {
                 //Check whether the mock value is legal, if it is illegal, throw exception
+                // 解析return 字符串
                 MockInvoker.parseMockValue(normalizedMock);
             } catch (Exception e) {
                 throw new IllegalStateException("Illegal mock return in <dubbo:service/reference ... " +
@@ -325,6 +334,7 @@ public class ConfigValidationUtils {
             if (ConfigUtils.isNotEmpty(normalizedMock)) {
                 try {
                     //Check whether the mock value is legal
+                    // 解析throw 字符串
                     MockInvoker.getThrowable(normalizedMock);
                 } catch (Exception e) {
                     throw new IllegalStateException("Illegal mock throw in <dubbo:service/reference ... " +

@@ -69,14 +69,16 @@ public abstract class AbstractDirectory<T> implements Directory<T> {
         if (url == null) {
             throw new IllegalArgumentException("url == null");
         }
-
+        // 获取所有的参数
         this.queryMap = StringUtils.parseQueryString(url.getParameterAndDecoded(REFER_KEY));
+        // 获取协议，默认是Dubbo
         this.consumedProtocol = this.queryMap.get(PROTOCOL_KEY) == null ? DUBBO : this.queryMap.get(PROTOCOL_KEY);
         this.url = url.removeParameter(REFER_KEY).removeParameter(MONITOR_KEY);
 
         String path = queryMap.get(PATH_KEY);
         URL consumerUrlFrom = this.url.setProtocol(consumedProtocol)
                 .setPath(path == null ? queryMap.get(INTERFACE_KEY) : path);
+        // 如果是动态URL
         if (isUrlFromRegistry) {
             // reserve parameters if url is already a consumer url
             consumerUrlFrom = consumerUrlFrom.clearParameters();

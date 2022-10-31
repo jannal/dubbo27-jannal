@@ -54,9 +54,11 @@ public class AsyncRpcResult implements Result {
      * So we should keep the reference of current RpcContext instance and restore it before callback being executed.
      */
     private RpcContext storedContext;
+    // 用于存储相关的 RpcContext 对象
     private RpcContext storedServerContext;
+    // 此次 RPC 调用关联的线程池。
     private Executor executor;
-
+    // 此次 RPC 调用关联的 Invocation 对象。
     private Invocation invocation;
 
     private CompletableFuture<AppResponse> responseFuture;

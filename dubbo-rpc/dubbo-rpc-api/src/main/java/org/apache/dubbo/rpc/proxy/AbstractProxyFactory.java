@@ -48,9 +48,10 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
     @Override
     public <T> T getProxy(Invoker<T> invoker, boolean generic) throws RpcException {
         Set<Class<?>> interfaces = new HashSet<>();
-
+        // 获取接口列表
         String config = invoker.getUrl().getParameter(INTERFACES);
         if (config != null && config.length() > 0) {
+            //分割接口列表
             String[] types = COMMA_SPLIT_PATTERN.split(config);
             for (String type : types) {
                 // TODO can we load successfully for a different classloader?.
@@ -59,6 +60,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
         }
 
         if (generic) {
+            // 泛化服务，兼容旧的GenericService
             if (GenericService.class.equals(invoker.getInterface()) || !GenericService.class.isAssignableFrom(invoker.getInterface())) {
                 interfaces.add(com.alibaba.dubbo.rpc.service.GenericService.class);
             }
@@ -73,6 +75,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
         }
 
         interfaces.add(invoker.getInterface());
+        // 回声Echo接口、Destroyable接口
         interfaces.addAll(Arrays.asList(INTERNAL_INTERFACES));
 
         return getProxy(invoker, interfaces.toArray(new Class<?>[0]));

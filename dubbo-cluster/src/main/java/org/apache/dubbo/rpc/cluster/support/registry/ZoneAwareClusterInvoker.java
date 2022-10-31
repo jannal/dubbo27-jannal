@@ -53,6 +53,12 @@ import static org.apache.dubbo.config.RegistryConfig.PREFER_REGISTRY_KEY;
  * 2. check the zone the current request belongs, pick the registry that has the same zone first.
  * 3. Evenly balance traffic between all registries based on each registry's weight.
  * 4. Pick anyone that's available.
+ *
+ * 提供了一种策略来决定如何在它们之间分配流量：
+ * 1. 标记为preferred=true的注册表具有最高优先级。
+ * 2. 查看当前请求所属的zone，首先选择具有相同zone的registry。
+ * 3. 根据每个注册中心的权重平均平衡所有注册中心之间的流量。
+ * 4. 选择一个可用的
  */
 public class ZoneAwareClusterInvoker<T> extends AbstractClusterInvoker<T> {
 
@@ -68,6 +74,7 @@ public class ZoneAwareClusterInvoker<T> extends AbstractClusterInvoker<T> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Result doInvoke(Invocation invocation, final List<Invoker<T>> invokers, LoadBalance loadbalance) throws RpcException {
         // First, pick the invoker (XXXClusterInvoker) that comes from the local registry, distinguish by a 'preferred' key.
+        // 首选配置（preferred=true）直接调用
         for (Invoker<T> invoker : invokers) {
             ClusterInvoker<T> clusterInvoker = (ClusterInvoker<T>) invoker;
             if (clusterInvoker.isAvailable() && clusterInvoker.getRegistryUrl()
@@ -77,6 +84,7 @@ public class ZoneAwareClusterInvoker<T> extends AbstractClusterInvoker<T> {
         }
 
         // providers in the registry with the same zone
+        // 选择同一个zone的提供者
         String zone = invocation.getAttachment(REGISTRY_ZONE);
         if (StringUtils.isNotEmpty(zone)) {
             for (Invoker<T> invoker : invokers) {
@@ -85,6 +93,7 @@ public class ZoneAwareClusterInvoker<T> extends AbstractClusterInvoker<T> {
                     return clusterInvoker.invoke(invocation);
                 }
             }
+            // 强制指定必须是同区域的，如果没有可利用的，则报错
             String force = invocation.getAttachment(REGISTRY_ZONE_FORCE);
             if (StringUtils.isNotEmpty(force) && "true".equalsIgnoreCase(force)) {
                 throw new IllegalStateException("No registry instance in zone or no available providers in the registry, zone: "
@@ -95,6 +104,7 @@ public class ZoneAwareClusterInvoker<T> extends AbstractClusterInvoker<T> {
 
 
         // load balance among all registries, with registry weight count in.
+        // 负载均衡选择所有注册中心，选择一个可利用的
         Invoker<T> balancedInvoker = select(loadBalanceAmongRegistries, invocation, invokers, null);
         if (balancedInvoker.isAvailable()) {
             return balancedInvoker.invoke(invocation);

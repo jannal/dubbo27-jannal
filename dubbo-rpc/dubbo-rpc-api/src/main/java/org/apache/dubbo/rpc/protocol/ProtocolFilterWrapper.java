@@ -50,11 +50,14 @@ public class ProtocolFilterWrapper implements Protocol {
 
     private static <T> Invoker<T> buildInvokerChain(final Invoker<T> invoker, String key, String group) {
         Invoker<T> last = invoker;
+        // 获取所有的过滤器
         List<Filter> filters = ExtensionLoader.getExtensionLoader(Filter.class).getActivateExtension(invoker.getUrl(), key, group);
 
         if (!filters.isEmpty()) {
+            // A->B->C->invoke
             for (int i = filters.size() - 1; i >= 0; i--) {
                 final Filter filter = filters.get(i);
+                // 装饰器增强原有的Invoker，组装过滤链
                 last = new FilterNode<T>(invoker, last, filter);
             }
         }
@@ -69,6 +72,7 @@ public class ProtocolFilterWrapper implements Protocol {
 
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
+        // registry 直接使用包装的protocol发布,并不会走Filter链
         if (UrlUtils.isRegistry(invoker.getUrl())) {
             return protocol.export(invoker);
         }
@@ -77,6 +81,7 @@ public class ProtocolFilterWrapper implements Protocol {
 
     @Override
     public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
+        // 如果是注册中心或者service-discovery-registry（应用发现协议），不构建过滤器
         if (UrlUtils.isRegistry(url)) {
             return protocol.refer(type, url);
         }

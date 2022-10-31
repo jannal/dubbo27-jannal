@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentMap;
  * SimpleRegistryService
  *
  */
-public class SimpleRegistryService extends AbstractRegistryService {
+class SimpleRegistryService extends AbstractRegistryService {
 
     private final ConcurrentMap<String, ConcurrentMap<String, URL>> remoteRegistered = new ConcurrentHashMap<String, ConcurrentMap<String, URL>>();
     private final ConcurrentMap<String, ConcurrentMap<String, NotifyListener>> remoteListeners = new ConcurrentHashMap<String, ConcurrentMap<String, NotifyListener>>();

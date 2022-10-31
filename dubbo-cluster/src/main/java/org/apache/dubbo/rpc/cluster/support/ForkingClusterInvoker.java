@@ -65,12 +65,16 @@ public class ForkingClusterInvoker<T> extends AbstractClusterInvoker<T> {
         try {
             checkInvokers(invokers, invocation);
             final List<Invoker<T>> selected;
+            // 获取forks配置参数，默认是2
             final int forks = getUrl().getParameter(FORKS_KEY, DEFAULT_FORKS);
+            // 获取超时配置
             final int timeout = getUrl().getParameter(TIMEOUT_KEY, DEFAULT_TIMEOUT);
+            // 如果 forks 配置无效，则直接将 invokers 赋值给 selected
             if (forks <= 0 || forks >= invokers.size()) {
                 selected = invokers;
             } else {
                 selected = new ArrayList<>(forks);
+                // 循环选出 forks 个 Invoker，并添加到 selected 中
                 while (selected.size() < forks) {
                     Invoker<T> invoker = select(loadbalance, invocation, invokers, selected);
                     if (!selected.contains(invoker)) {
@@ -82,21 +86,31 @@ public class ForkingClusterInvoker<T> extends AbstractClusterInvoker<T> {
             RpcContext.getContext().setInvokers((List) selected);
             final AtomicInteger count = new AtomicInteger();
             final BlockingQueue<Object> ref = new LinkedBlockingQueue<>();
+            // 遍历 selected 列表
             for (final Invoker<T> invoker : selected) {
+                // 为每个Invoker 创建一个执行线程，这是一个后台线程
                 executor.execute(() -> {
                     try {
+                        // 进行远程调用
                         Result result = invoker.invoke(invocation);
+                        // 将结果存到阻塞队列中
                         ref.offer(result);
                     } catch (Throwable e) {
                         int value = count.incrementAndGet();
+                        // 仅在 value 大于等于 selected.size() 时，才将异常对象
+                        // 可以保证异常对象不会出现在正常结果的前面，这样可从阻塞队列中优先取出正常的结果。
+                        // 如果所有的都发生异常，就只有一个异常会存在队列里，只要有一个成功，队列里就会有一个正确的结果
                         if (value >= selected.size()) {
+                            // 将异常对象存入到阻塞队列中
                             ref.offer(e);
                         }
                     }
                 });
             }
             try {
+                // 从阻塞队列中取出远程调用结果
                 Object ret = ref.poll(timeout, TimeUnit.MILLISECONDS);
+                // 如果结果类型为 Throwable，则抛出异常。否则返回结果
                 if (ret instanceof Throwable) {
                     Throwable e = (Throwable) ret;
                     throw new RpcException(e instanceof RpcException ? ((RpcException) e).getCode() : 0, "Failed to forking invoke provider " + selected + ", but no luck to perform the invocation. Last error is: " + e.getMessage(), e.getCause() != null ? e.getCause() : e);

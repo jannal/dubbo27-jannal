@@ -42,13 +42,13 @@ public interface Directory<T> extends Node {
 
     /**
      * list invokers.
-     *
+     * 会根据传入的Invocation请求，过滤自身维护的Invoker集合，返回符合条件的Invoker集合
      * @return invokers
      */
     List<Invoker<T>> list(Invocation invocation) throws RpcException;
-
+    // 返回当前Directory对象维护的全部Invoker对象
     List<Invoker<T>> getAllInvokers();
-
+    // Consumer端的URL
     URL getConsumerUrl();
 
     boolean isDestroyed();

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.rpc.Protocol</OriginalElement>
+  <nodes>
+    <node x="1047.4875000000002" y="238.0">org.apache.dubbo.registry.integration.InterfaceCompatibleRegistryProtocol</node>
+    <node x="1127.9875000000002" y="158.0">org.apache.dubbo.registry.integration.RegistryProtocol</node>
+    <node x="1329.9875000000002" y="158.0">org.apache.dubbo.qos.protocol.QosProtocolWrapper</node>
+    <node x="429.48750000000007" y="238.0">org.apache.dubbo.rpc.protocol.AbstractProxyProtocol</node>
+    <node x="810.3" y="158.0">org.apache.dubbo.config.mock.MockProtocol</node>
+    <node x="594.9875000000001" y="78.0">org.apache.dubbo.rpc.Protocol</node>
+    <node x="279.48750000000007" y="316.0">org.apache.dubbo.rpc.protocol.grpc.GrpcProtocol</node>
+    <node x="328.36875000000003" y="158.0">org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper</node>
+    <node x="0.0" y="158.0">org.apache.dubbo.rpc.protocol.ProtocolListenerWrapper</node>
+    <node x="615.4875000000001" y="0.0">org.apache.dubbo.common.extension.SPI</node>
+    <node x="678.4875000000001" y="238.0">org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol</node>
+    <node x="454.48750000000007" y="316.0">org.apache.dubbo.rpc.protocol.hessian.HessianProtocol</node>
+    <node x="573.3687500000001" y="158.0">org.apache.dubbo.rpc.protocol.AbstractProtocol</node>
+    <node x="203.61250000000007" y="238.0">org.apache.dubbo.rpc.protocol.injvm.InjvmProtocol</node>
+    <node x="867.4875000000001" y="238.0">org.apache.dubbo.rpc.support.MockProtocol</node>
+    <node x="653.4875000000001" y="316.0">org.apache.dubbo.rpc.protocol.http.HttpProtocol</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.dubbo.rpc.protocol.AbstractProxyProtocol" target="org.apache.dubbo.rpc.protocol.AbstractProtocol" relationship="GENERALIZATION">
+      <point x="4.999999999881766E-4" y="-14.0" />
+      <point x="543.988" y="212.0" />
+      <point x="665.369" y="212.0" />
+      <point x="2.4999999993724487E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.Protocol" target="org.apache.dubbo.common.extension.SPI" relationship="ANNOTATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.hessian.HessianProtocol" target="org.apache.dubbo.rpc.protocol.AbstractProxyProtocol" relationship="GENERALIZATION">
+      <point x="4.999999999881766E-4" y="-14.0" />
+      <point x="4.999999999881766E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.integration.RegistryProtocol" target="org.apache.dubbo.rpc.Protocol" relationship="REALIZATION">
+      <point x="4.999999998744897E-4" y="-14.0" />
+      <point x="1218.988" y="132.0" />
+      <point x="653.488" y="132.0" />
+      <point x="4.999999999881766E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.support.MockProtocol" target="org.apache.dubbo.rpc.protocol.AbstractProtocol" relationship="GENERALIZATION">
+      <point x="4.999999999881766E-4" y="-14.0" />
+      <point x="947.488" y="212.0" />
+      <point x="665.369" y="212.0" />
+      <point x="2.4999999993724487E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.injvm.InjvmProtocol" target="org.apache.dubbo.rpc.protocol.AbstractProtocol" relationship="GENERALIZATION">
+      <point x="-14.999500000000069" y="-14.0" />
+      <point x="268.113" y="212.0" />
+      <point x="665.369" y="212.0" />
+      <point x="2.4999999993724487E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol" target="org.apache.dubbo.rpc.protocol.AbstractProtocol" relationship="GENERALIZATION">
+      <point x="4.999999999881766E-4" y="-14.0" />
+      <point x="762.988" y="212.0" />
+      <point x="665.369" y="212.0" />
+      <point x="2.4999999993724487E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.grpc.GrpcProtocol" target="org.apache.dubbo.rpc.protocol.AbstractProxyProtocol" relationship="GENERALIZATION">
+      <point x="4.999999999313332E-4" y="-14.0" />
+      <point x="356.988" y="291.0" />
+      <point x="543.988" y="291.0" />
+      <point x="4.999999999881766E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.AbstractProtocol" target="org.apache.dubbo.rpc.Protocol" relationship="REALIZATION">
+      <point x="2.4999999993724487E-4" y="-14.0" />
+      <point x="665.369" y="132.0" />
+      <point x="653.488" y="132.0" />
+      <point x="4.999999999881766E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.http.HttpProtocol" target="org.apache.dubbo.rpc.protocol.AbstractProxyProtocol" relationship="GENERALIZATION">
+      <point x="4.999999999881766E-4" y="-14.0" />
+      <point x="729.488" y="291.0" />
+      <point x="543.988" y="291.0" />
+      <point x="4.999999999881766E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.qos.protocol.QosProtocolWrapper" target="org.apache.dubbo.rpc.Protocol" relationship="REALIZATION">
+      <point x="4.999999998744897E-4" y="-14.0" />
+      <point x="1437.988" y="132.0" />
+      <point x="653.488" y="132.0" />
+      <point x="4.999999999881766E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper" target="org.apache.dubbo.rpc.Protocol" relationship="REALIZATION">
+      <point x="2.499999999940883E-4" y="-14.0" />
+      <point x="440.869" y="132.0" />
+      <point x="653.488" y="132.0" />
+      <point x="4.999999999881766E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.registry.integration.InterfaceCompatibleRegistryProtocol" target="org.apache.dubbo.registry.integration.RegistryProtocol" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.injvm.InjvmProtocol" target="org.apache.dubbo.rpc.Protocol" relationship="REALIZATION">
+      <point x="4.999999999313332E-4" y="-14.0" />
+      <point x="283.113" y="132.0" />
+      <point x="653.488" y="132.0" />
+      <point x="4.999999999881766E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.rpc.protocol.ProtocolListenerWrapper" target="org.apache.dubbo.rpc.Protocol" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="124.0" y="132.0" />
+      <point x="653.488" y="132.0" />
+      <point x="4.999999999881766E-4" y="14.0" />
+    </edge>
+    <edge source="org.apache.dubbo.config.mock.MockProtocol" target="org.apache.dubbo.rpc.Protocol" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="890.3" y="132.0" />
+      <point x="653.488" y="132.0" />
+      <point x="4.999999999881766E-4" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.7197318007662834" showDependencies="false" x="773.0" y="171.99999999999994" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

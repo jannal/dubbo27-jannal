@@ -84,10 +84,12 @@ public class DubboInvoker<T> extends AbstractInvoker<T> {
     @Override
     protected Result doInvoke(final Invocation invocation) throws Throwable {
         RpcInvocation inv = (RpcInvocation) invocation;
+        // 调用的方法名称
         final String methodName = RpcUtils.getMethodName(invocation);
+        // 向Invocation中添加附加信息，这里将URL的path和version添加到附加信息中
         inv.setAttachment(PATH_KEY, getUrl().getPath());
         inv.setAttachment(VERSION_KEY, version);
-
+        // 选择一个ExchangeClient实例
         ExchangeClient currentClient;
         if (clients.length == 1) {
             currentClient = clients[0];
@@ -96,18 +98,24 @@ public class DubboInvoker<T> extends AbstractInvoker<T> {
         }
         try {
             boolean isOneway = RpcUtils.isOneway(getUrl(), invocation);
+            // 根据调用的方法名称和配置计算此次调用的超时时间
             int timeout = calculateTimeout(invocation, methodName);
             invocation.put(TIMEOUT_KEY, timeout);
             if (isOneway) {
+                // 不需要关注返回值的请求
                 boolean isSent = getUrl().getMethodParameter(methodName, Constants.SENT_KEY, false);
                 currentClient.send(inv, isSent);
                 return AsyncRpcResult.newDefaultAsyncResult(invocation);
             } else {
+                // 获取处理响应的线程池，对于同步请求，会使用ThreadlessExecutor
+                // 对于异步请求，则会使用共享的线程池
                 ExecutorService executor = getCallbackExecutor(getUrl(), inv);
+                // 发起请求
                 CompletableFuture<AppResponse> appResponseFuture =
                         currentClient.request(inv, timeout, executor).thenApply(obj -> (AppResponse) obj);
                 // save for 2.6.x compatibility, for example, TraceFilter in Zipkin uses com.alibaba.xxx.FutureAdapter
                 FutureContext.getContext().setCompatibleFuture(appResponseFuture);
+                // 统一封装为AsyncRpcResult返回， AsyncRpcResult它表示的是一个异步的、未完成的 RPC 调用，其中会记录对应 RPC 调用的信息
                 AsyncRpcResult result = new AsyncRpcResult(appResponseFuture, inv);
                 result.setExecutor(executor);
                 return result;

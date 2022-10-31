@@ -143,12 +143,14 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
             logger.warn("Invoker for service " + this + " on consumer " + NetUtils.getLocalHost() + " is destroyed, "
                     + ", dubbo version is " + Version.getVersion() + ", this invoker should not be used any longer");
         }
+        // 强制转换为RpcInvocation
         RpcInvocation invocation = (RpcInvocation) inv;
         invocation.setInvoker(this);
+        // 设置附加信息
         if (CollectionUtils.isNotEmptyMap(attachment)) {
             invocation.addObjectAttachmentsIfAbsent(attachment);
         }
-
+        // 将RpcContext的附加信息添加为Invocation的附加信息
         Map<String, Object> contextAttachments = RpcContext.getContext().getObjectAttachments();
         if (CollectionUtils.isNotEmptyMap(contextAttachments)) {
             /**
@@ -159,8 +161,9 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
              */
             invocation.addObjectAttachments(contextAttachments);
         }
-
+        // 同步还是异步调用
         invocation.setInvokeMode(RpcUtils.getInvokeMode(url, invocation));
+        // 异步调用添加唯一ID
         RpcUtils.attachInvocationIdIfAsync(getUrl(), invocation);
 
         Byte serializationId = CodecSupport.getIDByName(getUrl().getParameter(SERIALIZATION_KEY, DEFAULT_REMOTING_SERIALIZATION));
@@ -170,6 +173,7 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
 
         AsyncRpcResult asyncResult;
         try {
+            // 调用子类的实现
             asyncResult = (AsyncRpcResult) doInvoke(invocation);
         } catch (InvocationTargetException e) { // biz exception
             Throwable te = e.getTargetException();

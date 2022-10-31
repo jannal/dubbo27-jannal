@@ -121,36 +121,47 @@ public abstract class Wrapper {
     }
 
     private static Wrapper makeWrapper(Class<?> c) {
+        // 基本类型直接抛出异常，c是接口（类似cn.jannal.dubbo.facade.DemoService）
         if (c.isPrimitive()) {
             throw new IllegalArgumentException("Can not create wrapper for primitive type: " + c);
         }
 
         String name = c.getName();
+        // 获取接口的ClassLoader
         ClassLoader cl = ClassUtils.getClassLoader(c);
-
+        // c1 用于存储 setPropertyValue 方法代码
         StringBuilder c1 = new StringBuilder("public void setPropertyValue(Object o, String n, Object v){ ");
+        // c2 用于存储 getPropertyValue 方法代码
         StringBuilder c2 = new StringBuilder("public Object getPropertyValue(Object o, String n){ ");
+        // c3 用于存储 invokeMethod 方法代码
         StringBuilder c3 = new StringBuilder("public Object invokeMethod(Object o, String n, Class[] p, Object[] v) throws " + InvocationTargetException.class.getName() + "{ ");
-
+        // 生成类型转换代码和异常捕获代码
         c1.append(name).append(" w; try{ w = ((").append(name).append(")$1); }catch(Throwable e){ throw new IllegalArgumentException(e); }");
         c2.append(name).append(" w; try{ w = ((").append(name).append(")$1); }catch(Throwable e){ throw new IllegalArgumentException(e); }");
         c3.append(name).append(" w; try{ w = ((").append(name).append(")$1); }catch(Throwable e){ throw new IllegalArgumentException(e); }");
 
+        // pts 用于存储成员变量名和类型
         Map<String, Class<?>> pts = new HashMap<>(); // <property name, property types>
+        // ms 用于存储方法描述信息（方法签名）及 Method 实例
         Map<String, Method> ms = new LinkedHashMap<>(); // <method desc, Method instance>
+        // mns 为方法名列表
         List<String> mns = new ArrayList<>(); // method names.
+        // dmns 用于存储定义在当前类中的方法的名称
         List<String> dmns = new ArrayList<>(); // declaring method names.
 
         // get all public field.
+        // 获取 public 访问级别的字段，并为所有字段生成条件判断语句
         for (Field f : c.getFields()) {
             String fn = f.getName();
             Class<?> ft = f.getType();
+            // 忽略关键字 static 或 transient 修饰的变量
             if (Modifier.isStatic(f.getModifiers()) || Modifier.isTransient(f.getModifiers())) {
                 continue;
             }
-
+            // 生成条件判断及赋值语句
             c1.append(" if( $2.equals(\"").append(fn).append("\") ){ w.").append(fn).append("=").append(arg(ft, "$3")).append("; return; }");
             c2.append(" if( $2.equals(\"").append(fn).append("\") ){ return ($w)w.").append(fn).append("; }");
+            // 存储 <字段名, 字段类型> 键值对
             pts.put(fn, ft);
         }
 
@@ -184,12 +195,15 @@ public abstract class Wrapper {
             for (Method m : methods) {
                 //ignore Object's method.
                 if (m.getDeclaringClass() == Object.class) {
+                    // 忽略Object中定义的方法
                     continue;
                 }
 
                 String mn = m.getName();
+                // 生成方法名判断语句
                 c3.append(" if( \"").append(mn).append("\".equals( $2 ) ");
                 int len = m.getParameterTypes().length;
+                // 生成"运行时传入的参数数量与方法参数列表长度"判断语句
                 c3.append(" && ").append(" $3.length == ").append(len);
 
                 boolean overload = sameNameMethodCount.get(m.getName()) > 1;
@@ -226,6 +240,7 @@ public abstract class Wrapper {
         c3.append(" throw new " + NoSuchMethodException.class.getName() + "(\"Not found method \\\"\"+$2+\"\\\" in class " + c.getName() + ".\"); }");
 
         // deal with get/set method.
+        // 处理getter/setter/is方法
         Matcher matcher;
         for (Map.Entry<String, Method> entry : ms.entrySet()) {
             String md = entry.getKey();
@@ -245,16 +260,20 @@ public abstract class Wrapper {
                 pts.put(pn, pt);
             }
         }
+        // 添加 NoSuchPropertyException 异常抛出代码
         c1.append(" throw new " + NoSuchPropertyException.class.getName() + "(\"Not found property \\\"\"+$2+\"\\\" field or setter method in class " + c.getName() + ".\"); }");
         c2.append(" throw new " + NoSuchPropertyException.class.getName() + "(\"Not found property \\\"\"+$2+\"\\\" field or getter method in class " + c.getName() + ".\"); }");
 
         // make class
         long id = WRAPPER_CLASS_COUNTER.getAndIncrement();
+        // 创建类生成器
         ClassGenerator cc = ClassGenerator.newInstance(cl);
+        // 设置类名及超类
         cc.setClassName((Modifier.isPublic(c.getModifiers()) ? Wrapper.class.getName() : c.getName() + "$sw") + id);
         cc.setSuperClass(Wrapper.class);
-
+        // 添加默认构造方法
         cc.addDefaultConstructor();
+        // 添加字段
         cc.addField("public static String[] pns;"); // property name array.
         cc.addField("public static " + Map.class.getName() + " pts;"); // property type map.
         cc.addField("public static String[] mns;"); // all method name array.
@@ -262,7 +281,7 @@ public abstract class Wrapper {
         for (int i = 0, len = ms.size(); i < len; i++) {
             cc.addField("public static Class[] mts" + i + ";");
         }
-
+        // 添加方法代码
         cc.addMethod("public String[] getPropertyNames(){ return pns; }");
         cc.addMethod("public boolean hasProperty(String n){ return pts.containsKey($1); }");
         cc.addMethod("public Class getPropertyType(String n){ return (Class)pts.get($1); }");
@@ -273,8 +292,10 @@ public abstract class Wrapper {
         cc.addMethod(c3.toString());
 
         try {
+            // 生成类
             Class<?> wc = cc.toClass();
             // setup static field.
+            // 设置字段值
             wc.getField("pts").set(null, pts);
             wc.getField("pns").set(null, pts.keySet().toArray(new String[0]));
             wc.getField("mns").set(null, mns.toArray(new String[0]));
@@ -283,6 +304,7 @@ public abstract class Wrapper {
             for (Method m : ms.values()) {
                 wc.getField("mts" + ix++).set(null, m.getParameterTypes());
             }
+            // 创建 Wrapper 实例
             return (Wrapper) wc.getDeclaredConstructor().newInstance();
         } catch (RuntimeException e) {
             throw e;

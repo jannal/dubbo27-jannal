@@ -59,6 +59,10 @@ import static org.apache.dubbo.rpc.Constants.ACCESS_LOG_KEY;
  *    &lt;appender-ref ref="foo" /&gt;
  * &lt;/logger&gt;
  * </pre></code>
+ *
+ * 1. 打印每次的访问日志，如果需要访问的日志只出现在指定的appender中，
+ * 可以在log的配置文件中添加additivity
+ * 2. 用在provider
  */
 @Activate(group = PROVIDER, value = ACCESS_LOG_KEY)
 public class AccessLogFilter implements Filter {
@@ -78,8 +82,8 @@ public class AccessLogFilter implements Filter {
     // It's safe to declare it as singleton since it runs on single thread only
     private static final DateFormat FILE_NAME_FORMATTER = new SimpleDateFormat(FILE_DATE_FORMAT);
 
-    private static final Map<String, Queue<AccessLogData>> LOG_ENTRIES = new ConcurrentHashMap<>();
-
+    private static final Map<String/*日志文件名*/, Queue<AccessLogData>> LOG_ENTRIES = new ConcurrentHashMap<>();
+    // 定时把日志写入到文件，只有指定了输出log文件时才会用到
     private static final ScheduledExecutorService LOG_SCHEDULED = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory("Dubbo-Access-Log", true));
 
     /**

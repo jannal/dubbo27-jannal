@@ -45,7 +45,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.VERSION_KEY;
 public abstract class AbstractProtocol implements Protocol {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
-
+    // 服务暴露mao
     protected final DelegateExporterMap exporterMap = new DelegateExporterMap();
 
     /**
@@ -56,6 +56,8 @@ public abstract class AbstractProtocol implements Protocol {
     //TODO SoftReference
     protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
 
+    // 获取ServiceKey：group0/com.alibaba.dubbo.demo.DemoService:1.0.0:20882
+    // group+"/"+serviceName+":"+serviceVersion+":"+port
     protected static String serviceKey(URL url) {
         int port = url.getParameter(Constants.BIND_PORT_KEY, url.getPort());
         return serviceKey(port, url.getPath(), url.getParameter(VERSION_KEY), url.getParameter(GROUP_KEY));
@@ -101,6 +103,7 @@ public abstract class AbstractProtocol implements Protocol {
 
     @Override
     public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
+        // 异步转同步，主要是针对同步模式下，将异步转为同步（设置等待最大超时时间）
         return new AsyncToSyncInvoker<>(protocolBindingRefer(type, url));
     }
 

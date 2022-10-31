@@ -230,6 +230,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
     }
 
     public synchronized void init() {
+        // 避免重复初始化
         if (initialized) {
             return;
         }
@@ -298,7 +299,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
                 }
             }
         }
-
+        // 以系统环境变量（DUBBO_IP_TO_REGISTRY）的值作为服务消费者ip地址,没有设置再取主机地址
         String hostToRegistry = ConfigUtils.getSystemProperty(DUBBO_IP_TO_REGISTRY);
         if (StringUtils.isEmpty(hostToRegistry)) {
             hostToRegistry = NetUtils.getLocalHost();
@@ -309,7 +310,8 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
         map.put(REGISTER_IP_KEY, hostToRegistry);
 
         serviceMetadata.getAttachments().putAll(map);
-
+        // 创建代理类
+        // Dubbo支持多注册中心同时消费，如果有多个注册中心，则合并成一个invoker
         ref = createProxy(map);
 
         serviceMetadata.setTarget(ref);
@@ -329,24 +331,35 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
     @SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
     private T createProxy(Map<String, String> map) {
         if (shouldJvmRefer(map)) {
+            // 本地引用设置protocol为injvm，此时protocol对应的是InjvmProtocol，invoker对应的是InjvmInvoker
             URL url = new URL(LOCAL_PROTOCOL, LOCALHOST_VALUE, 0, interfaceClass.getName()).addParameters(map);
+            // 直接从内存中获取实例inJvm
             invoker = REF_PROTOCOL.refer(interfaceClass, url);
             if (logger.isInfoEnabled()) {
                 logger.info("Using injvm service " + interfaceClass.getName());
             }
         } else {
             urls.clear();
+            // 远程引用，url 不为空（比如dubbo://172.16.117.33:20882，多个使用分号分隔），表明想进行点对点调用
             if (url != null && url.length() > 0) { // user specified URL, could be peer-to-peer address, or register center's address.
+                // 使用分号分割多个
                 String[] us = SEMICOLON_SPLIT_PATTERN.split(url);
                 if (us != null && us.length > 0) {
                     for (String u : us) {
                         URL url = URL.valueOf(u);
                         if (StringUtils.isEmpty(url.getPath())) {
+                            // 设置接口全限定名为 url 路径
                             url = url.setPath(interfaceName);
                         }
+                        // 检测 url 协议是否为 registry，若是，表明用户想使用指定的注册中心(直连模式使用注册中心)
+                        // xml中的url配置类似如下格式registry://dubbo-zookeeper:2181/cn.jannal.dubbo.facade.DemoService/?registry=zookeeper
                         if (UrlUtils.isRegistry(url)) {
+                            // 将 map 转换为查询字符串，并作为 refer 参数的值添加到 url 中
                             urls.add(url.addParameterAndEncoded(REFER_KEY, StringUtils.toQueryString(map)));
                         } else {
+                            // 合并url，移除服务提供者的一些配置（这些配置来源于用户配置的 url 属性），
+                            // 比如线程池相关配置。并保留服务提供者的部分配置，比如版本，group，时间戳等
+                            // 最后将合并后的配置设置为 url 查询字符串中。
                             urls.add(ClusterUtils.mergeUrl(url, map));
                         }
                     }
@@ -355,6 +368,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
                 // if protocols not injvm checkRegistry
                 if (!LOCAL_PROTOCOL.equalsIgnoreCase(getProtocol())) {
                     checkRegistry();
+                    // 加载注册中心 url
                     List<URL> us = ConfigValidationUtils.loadRegistries(this, false);
                     if (CollectionUtils.isNotEmpty(us)) {
                         for (URL u : us) {
@@ -362,9 +376,11 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
                             if (monitorUrl != null) {
                                 map.put(MONITOR_KEY, URL.encode(monitorUrl.toFullString()));
                             }
+                            // 添加 refer 参数到 url 中，并将 url 添加到 urls 中
                             urls.add(u.addParameterAndEncoded(REFER_KEY, StringUtils.toQueryString(map)));
                         }
                     }
+                    // 未配置注册中心，抛出异常
                     if (urls.isEmpty()) {
                         throw new IllegalStateException(
                                 "No such any registry to reference " + interfaceName + " on the consumer " + NetUtils.getLocalHost() +
@@ -373,15 +389,21 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
                     }
                 }
             }
-
+            // 单个注册中心或服务提供者(服务直连，下同)
             if (urls.size() == 1) {
+                // 直连调用是直接调用DubboProtocol 的 refer 构建 Invoker 实例
+                // DubboProtocol => DubboInvoker
                 invoker = REF_PROTOCOL.refer(interfaceClass, urls.get(0));
             } else {
+                // 多个注册中心或多个服务提供者，或者两者混合
                 List<Invoker<?>> invokers = new ArrayList<Invoker<?>>();
                 URL registryURL = null;
+                // 获取所有的 Invoker
                 for (URL url : urls) {
                     // For multi-registry scenarios, it is not checked whether each referInvoker is available.
                     // Because this invoker may become available later.
+                    // 通过 refprotocol 调用 refer 构建 Invoker，refprotocol 会在运行时
+                    // 根据 url 协议头加载指定的 Protocol 实例（RegistryProtocol），并调用实例的 refer 方法
                     invokers.add(REF_PROTOCOL.refer(interfaceClass, url));
 
                     if (UrlUtils.isRegistry(url)) {
@@ -400,6 +422,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
                             (invokers.get(0).getUrl() != null ? invokers.get(0).getUrl().getParameter(CLUSTER_KEY, ZoneAwareCluster.NAME) :
                                     Cluster.DEFAULT)
                             : Cluster.DEFAULT;
+                    // 无注册中心（直连），创建 StaticDirectory 实例，并由 Cluster 对多个 Invoker 进行合并
                     invoker = Cluster.getCluster(cluster).join(new StaticDirectory(invokers));
                 }
             }
@@ -413,6 +436,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
         MetadataUtils.publishServiceDefinition(consumerURL);
 
         // create service proxy
+        // 根据接口创建代理对象，并返回
         return (T) PROXY_FACTORY.getProxy(invoker, ProtocolUtils.isGeneric(generic));
     }
 
@@ -450,13 +474,16 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
         configInitializers.forEach(e -> e.initReferConfig(this));
 
         this.refresh();
+        // 设置 generic
         if (getGeneric() == null && getConsumer() != null) {
             setGeneric(getConsumer().getGeneric());
         }
+        // 检测是否为泛化接口
         if (ProtocolUtils.isGeneric(generic)) {
             interfaceClass = GenericService.class;
         } else {
             try {
+                // 尝试加载类
                 interfaceClass = Class.forName(interfaceName, true, Thread.currentThread()
                         .getContextClassLoader());
             } catch (ClassNotFoundException e) {
@@ -464,7 +491,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
             }
             checkInterfaceAndMethods(interfaceClass, getMethods());
         }
-
+        // 初始化服务元数据
         initServiceMetadata(consumer);
         serviceMetadata.setServiceType(getActualInterface());
         // TODO, uncomment this line once service key is unified
@@ -497,14 +524,18 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
         URL tmpUrl = new URL("temp", "localhost", 0, map);
         boolean isJvmRefer;
         if (isInjvm() == null) {
+            // url 配置被指定（直连模式），则不做本地引用
             // if a url is specified, don't do local reference
             if (url != null && url.length() > 0) {
                 isJvmRefer = false;
             } else {
                 // by default, reference local service if there is
+                // 根据 url 的协议、scope 以及 injvm 等参数检测是否需要本地引用
+                // 比如如果用户显式配置了 scope=local，此时 isInjvmRefer 返回 true
                 isJvmRefer = InjvmProtocol.getInjvmProtocol().isInjvmRefer(tmpUrl);
             }
         } else {
+            // 获取 injvm 配置值 ， <dubbo:reference injvm="true" /> 这种配置时，已过时（现在使用scope="local"）
             isJvmRefer = isInjvm();
         }
         return isJvmRefer;

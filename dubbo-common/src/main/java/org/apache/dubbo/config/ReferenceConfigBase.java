@@ -206,28 +206,35 @@ public abstract class ReferenceConfigBase<T> extends AbstractReferenceConfig {
     }
 
     public void resolveFile() {
+        // 从系统变量中获取与接口名对应的属性值,用于直连，配置类似java -Dcom.alibaba.xxx.XxxService=dubbo://localhost:20890
         String resolve = System.getProperty(interfaceName);
         String resolveFile = null;
         if (StringUtils.isEmpty(resolve)) {
+            // 从系统属性中获取解析文件路径，java -Ddubbo.resolve.file=xxx.properties 优先级高
             resolveFile = System.getProperty("dubbo.resolve.file");
             if (StringUtils.isEmpty(resolveFile)) {
+                // 从指定位置加载配置文件
                 File userResolveFile = new File(new File(System.getProperty("user.home")), "dubbo-resolve.properties");
                 if (userResolveFile.exists()) {
+                    // 获取文件绝对路径
                     resolveFile = userResolveFile.getAbsolutePath();
                 }
             }
+            // 文件优先级次之
             if (resolveFile != null && resolveFile.length() > 0) {
                 Properties properties = new Properties();
                 try (FileInputStream fis = new FileInputStream(new File(resolveFile))) {
+                    // 从文件中加载配置（用于直连），映射文件的格式类似com.alibaba.xxx.XxxService=dubbo://localhost:20890
                     properties.load(fis);
                 } catch (IOException e) {
                     throw new IllegalStateException("Failed to load " + resolveFile + ", cause: " + e.getMessage(), e);
                 }
-
+                // 获取与接口名对应的配置
                 resolve = properties.getProperty(interfaceName);
             }
         }
         if (resolve != null && resolve.length() > 0) {
+            // 赋值给直连的URL地址，类似dubbo://172.16.117.33:20882/
             url = resolve;
             if (logger.isWarnEnabled()) {
                 if (resolveFile != null) {

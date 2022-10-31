@@ -459,9 +459,14 @@ public class RegistryProtocol implements Protocol {
     @Override
     @SuppressWarnings("unchecked")
     public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
+        // 设置注册中心协议
         url = getRegistryUrl(url);
+        // 创建具体注册中心实例
         Registry registry = getRegistry(url);
+        // 直接引用的是RegistryService（直连simple注册中心模式，就是一个普通的Dubbo服务）
         if (RegistryService.class.equals(type)) {
+            // registry是ListenerRegistryWrapper，包装的是DubboRegistry。
+            // getInvoker返回的是一个Wrapper，为了减少反射带来的开销
             return proxyFactory.getInvoker((T) registry, type, url);
         }
 
@@ -473,14 +478,17 @@ public class RegistryProtocol implements Protocol {
                 return doRefer(Cluster.getCluster(MergeableCluster.NAME), registry, type, url, qs);
             }
         }
-
+        // 默认Cluster是failover
         Cluster cluster = Cluster.getCluster(qs.get(CLUSTER_KEY));
         return doRefer(cluster, registry, type, url, qs);
     }
 
     protected <T> Invoker<T> doRefer(Cluster cluster, Registry registry, Class<T> type, URL url, Map<String, String> parameters) {
+        // 构建consumer URL
         URL consumerUrl = new URL(CONSUMER_PROTOCOL, parameters.remove(REGISTER_IP_KEY), 0, type.getName(), parameters);
+        // 获取迁移的ClusterInvoker
         ClusterInvoker<T> migrationInvoker = getMigrationInvoker(this, cluster, registry, type, url, consumerUrl);
+        // 提供给用户自定义或更改 RegistryProtocol 的导出和引用行为的扩展
         return interceptInvoker(migrationInvoker, url, consumerUrl);
     }
 
@@ -490,6 +498,7 @@ public class RegistryProtocol implements Protocol {
     }
 
     protected <T> Invoker<T> interceptInvoker(ClusterInvoker<T> invoker, URL url, URL consumerUrl) {
+        // 默认有一个MigrationRuleListener
         List<RegistryProtocolListener> listeners = findRegistryProtocolListeners(url);
         if (CollectionUtils.isEmpty(listeners)) {
             return invoker;
@@ -509,6 +518,7 @@ public class RegistryProtocol implements Protocol {
     public <T> ClusterInvoker<T> getInvoker(Cluster cluster, Registry registry, Class<T> type, URL url) {
         // FIXME, this method is currently not used, create the right registry before enable.
         DynamicDirectory<T> directory = new RegistryDirectory<>(type, url);
+        // 构建DynamicDirectory需要的对象
         return doCreateInvoker(directory, cluster, registry, type);
     }
 
@@ -523,8 +533,9 @@ public class RegistryProtocol implements Protocol {
             registry.register(directory.getRegisteredConsumerUrl());
         }
         directory.buildRouterChain(urlToRegistry);
+        // 订阅URL，回调监听器就是directory本身
         directory.subscribe(toSubscribeUrl(urlToRegistry));
-
+        // 合并多个Invoker为一个集群Invoker
         return (ClusterInvoker<T>) cluster.join(directory);
     }
 

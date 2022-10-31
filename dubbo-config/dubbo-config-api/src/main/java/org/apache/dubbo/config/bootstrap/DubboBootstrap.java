@@ -517,14 +517,14 @@ public class DubboBootstrap {
         }
 
         ApplicationModel.initFrameworkExts();
-
+        // 启动配置中心
         startConfigCenter();
 
         loadRemoteConfigs();
 
         checkGlobalConfigs();
 
-        // @since 2.7.8
+        // @since 2.7.8 启动元数据中心
         startMetadataCenter();
 
         initMetadataService();
@@ -886,6 +886,7 @@ public class DubboBootstrap {
      * Start the bootstrap
      */
     public DubboBootstrap start() {
+        // 避免重复启动
         if (started.compareAndSet(false, true)) {
             destroyed.set(false);
             ready.set(false);
@@ -894,16 +895,20 @@ public class DubboBootstrap {
                 logger.info(NAME + " is starting...");
             }
             // 1. export Dubbo Services
+            // 导出服务
             exportServices();
 
             // Not only provider register
             if (!isOnlyRegisterProvider() || hasExportedServices()) {
                 // 2. export MetadataService
+                // 发布元数据MetadataService接口
                 exportMetadataService();
                 //3. Register the local ServiceInstance if required
+                // 注册应用实例
                 registerServiceInstance();
             }
 
+            // 引用接口
             referServices();
             if (asyncExportingFutures.size() > 0) {
                 new Thread(() -> {
@@ -1094,7 +1099,7 @@ public class DubboBootstrap {
             // TODO, compatible with ServiceConfig.export()
             ServiceConfig serviceConfig = (ServiceConfig) sc;
             serviceConfig.setBootstrap(this);
-
+            // 异步发布
             if (exportAsync) {
                 ExecutorService executor = executorRepository.getServiceExporterExecutor();
                 Future<?> future = executor.submit(() -> {
@@ -1120,6 +1125,7 @@ public class DubboBootstrap {
                     "please modify the group or version if you really need to export multiple services of the same interface.");
         }
         sc.export();
+        // 发布完添加到发布服务的集合中
         exportedServices.put(sc.getServiceName(), sc);
     }
 

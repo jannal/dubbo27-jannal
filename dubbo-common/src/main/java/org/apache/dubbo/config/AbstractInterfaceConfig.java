@@ -255,10 +255,15 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
     /**
      * Legitimacy check of stub, note that: the local will deprecated, and replace with <code>stub</code>
      *
+     *
      * @param interfaceClass for provider side, it is the {@link Class} of the service that will be exported; for consumer
      *                       side, it is the {@link Class} of the remote service interface
      */
     public void checkStubAndLocal(Class<?> interfaceClass) {
+        // stub设为true，表示使用缺省代理类名，即：接口名 +Stub后缀，
+        // 服务接口客户端本地代理类名，用于在客户端执行本地逻辑，如本地缓存等，
+        // 该本地代理类的构造函数必须允许传入远程代理对象，
+        // 构造函数如：public XxxServiceStub(XxxService xxxService)
         verifyStubAndLocal(local, "Local", interfaceClass);
         verifyStubAndLocal(stub, "Stub", interfaceClass);
     }
@@ -272,6 +277,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
     }
 
     private void verify(Class<?> interfaceClass, Class<?> localClass) {
+        //local或Stub实现类必须实现业务接口
         if (!interfaceClass.isAssignableFrom(localClass)) {
             throw new IllegalStateException("The local implementation class " + localClass.getName() +
                     " not implement interface " + interfaceClass.getName());
@@ -279,6 +285,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
 
         try {
             //Check if the localClass a constructor with parameter who's type is interfaceClass
+            // local或Stub实现类必须有一个接口构造函数
             ReflectUtils.findConstructor(localClass, interfaceClass);
         } catch (NoSuchMethodException e) {
             throw new IllegalStateException("No such constructor \"public " + localClass.getSimpleName() +

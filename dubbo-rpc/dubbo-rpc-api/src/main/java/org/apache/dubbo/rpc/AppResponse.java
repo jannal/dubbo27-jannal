@@ -53,11 +53,11 @@ import static org.apache.dubbo.rpc.Constants.INVOCATION_KEY;
 public class AppResponse implements Result {
 
     private static final long serialVersionUID = -6925924956850004727L;
-
+    // 方法响应结果
     private Object result;
-
+    // 服务端返回的异常信息
     private Throwable exception;
-
+    // 服务端返回的附加信息
     private Map<String, Object> attachments = new HashMap<>();
 
     private Map<String, Object> attributes = new HashMap<>();

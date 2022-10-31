@@ -77,6 +77,7 @@ public class FailbackClusterInvoker<T> extends AbstractClusterInvoker<T> {
         if (failTimer == null) {
             synchronized (this) {
                 if (failTimer == null) {
+                    // 创建定时任务
                     failTimer = new HashedWheelTimer(
                             new NamedThreadFactory("failback-cluster-timer", true),
                             1,
@@ -96,13 +97,17 @@ public class FailbackClusterInvoker<T> extends AbstractClusterInvoker<T> {
     protected Result doInvoke(Invocation invocation, List<Invoker<T>> invokers, LoadBalance loadbalance) throws RpcException {
         Invoker<T> invoker = null;
         try {
+            // 检查invokers是否合法，及是否为空
             checkInvokers(invokers, invocation);
+            // 根据负载均衡策略选择一个invoker
             invoker = select(loadbalance, invocation, invokers, null);
+            // 远程调用
             return invoker.invoke(invocation);
         } catch (Throwable e) {
             logger.error("Failback to invoke method " + invocation.getMethodName() + ", wait for retry in background. Ignored exception: "
                     + e.getMessage() + ", ", e);
             if (retries > 0) {
+                // 如果失败则添加到定时器中
                 addFailed(loadbalance, invocation, invokers, invoker);
             }
             return AsyncRpcResult.newDefaultAsyncResult(null, null, invocation); // ignore

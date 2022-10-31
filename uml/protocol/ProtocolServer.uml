@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.apache.dubbo.rpc.ProtocolServer</OriginalElement>
+  <nodes>
+    <node x="0.0" y="0.0">org.apache.dubbo.rpc.ProtocolServer</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="84.0" y="14.0" />
+  <SelectedNodes>
+    <node>org.apache.dubbo.rpc.ProtocolServer</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
